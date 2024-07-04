@@ -1,0 +1,26 @@
+version: '3'
+services:
+  mysql-docker:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: '${MYSQL_ROOT_PASSWORD}'
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_DATABASE: '${MYSQL_DATABASE}'
+      MYSQL_USER: '${MYSQL_USER}'
+      MYSQL_PASSWORD: '${MYSQL_PASSWORD}'
+    container_name: 'swyp-mysql'
+    ports:
+      - '3306:3306'
+    volumes:
+      - ./db/mysql/data:/var/lib/mysql
+      - ./initdb:/docker-entrypoint-initdb.d
+ 
+  redis-docker:
+    image: redis:latest
+    container_name: 'swyp-redis'
+    command: redis-server --port 6379
+    ports:
+      - '6379:6379'
+    volumes:
+      - ./db/redis/data:/data
+      - ./db/redis/conf/redis.conf:/usr/local/conf/redis.conf
