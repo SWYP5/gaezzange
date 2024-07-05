@@ -1,22 +1,26 @@
 version: '3'
 services:
   mysql-docker:
-    image: mysql:latest
-    environment:
-      MYSQL_ROOT_PASSWORD: '${MYSQL_ROOT_PASSWORD}'
-      MYSQL_ROOT_HOST: "%"
-      MYSQL_DATABASE: '${MYSQL_DATABASE}'
-      MYSQL_USER: '${MYSQL_USER}'
-      MYSQL_PASSWORD: '${MYSQL_PASSWORD}'
+    image: mysql:8.0.38
     container_name: 'swyp-mysql'
+    restart: always
     ports:
       - '3306:3306'
+    environment:
+      MYSQL_DATABASE: 'gaezzange'
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-password}
+      MYSQL_USER: ${MYSQL_USER:-local}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-password}
+      TZ: Asia/Seoul
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
     volumes:
       - ./db/mysql/data:/var/lib/mysql
       - ./initdb:/docker-entrypoint-initdb.d
  
   redis-docker:
-    image: redis:latest
+    image: redis:7.2.5
     container_name: 'swyp-redis'
     command: redis-server --port 6379
     ports:
