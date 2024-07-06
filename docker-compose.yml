@@ -28,3 +28,23 @@ services:
     volumes:
       - ./db/redis/data:/data
       - ./db/redis/conf/redis.conf:/usr/local/conf/redis.conf
+
+  nginx-docker:
+    image: nginx:latest
+    container_name: 'swyp-nginx'
+    environment:
+      - HOST_PRIVATE_IP=${HOST_PRIVATE_IP}
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - mysql-docker
+      - redis-docker
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

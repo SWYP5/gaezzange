@@ -13,6 +13,14 @@ java {
 	}
 }
 
+springBoot {
+	mainClass = 'com.swyp.gaezzange.GaezzangeApplication'
+}
+
+bootJar{
+	archiveFileName = 'gaezzange-application.jar'
+}
+
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
