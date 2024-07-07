@@ -1,4 +1,4 @@
-package com.swyp.gaezzange.security;
+package com.swyp.gaezzange.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +15,8 @@ public class GaezzangeSecurityConfig {
                 .csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable())
                 .authorizeHttpRequests(registry ->
                         registry.requestMatchers("/hello").permitAll()
+                                .requestMatchers("/swagger-ui/**").permitAll()
+                                .requestMatchers("/v3/api-docs/**").permitAll()
                 );
 
         return http.build();
