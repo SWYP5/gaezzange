@@ -52,8 +52,8 @@ jobs:
 
       - name: Create remote directory and copy JAR files
         run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} "mkdir -p ~/cicd"
-          scp *.jar ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:~/cicd
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} "mkdir -p ~/app"
+          scp *.jar ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:~/app
 
       - name: Check out repository
         uses: actions/checkout@v3
@@ -65,12 +65,13 @@ jobs:
           echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> .env
           echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env
           echo "HOST_PRIVATE_IP=${{ secrets.HOST_PRIVATE_IP }}" >> .env
+          echo "SERVER_NAME=${{ secrets.SERVER_NAME }}" >> .env
 
       - name: Copy Docker Compose and configurations
         run: |
           ls
           scp -o StrictHostKeyChecking=no ./docker-compose.yml ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:~/
-          scp -o StrictHostKeyChecking=no ./nginx.conf ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:~/
+          scp -o StrictHostKeyChecking=no -r ./nginx ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:~/
           scp -o StrictHostKeyChecking=no -r ./initdb ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:~/initdb
           scp -o StrictHostKeyChecking=no ./.env ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}:~/.env
 
@@ -90,10 +91,10 @@ jobs:
               sudo apt-get install -y openjdk-17-jre-headless
             fi
             sudo fuser -k 8080/tcp || true
-            sudo nohup java -jar ~/cicd/gaezzange-application.jar  \
+            sudo nohup java -jar ~/app/gaezzange-application.jar  \
             --spring.profiles.active=${{ secrets.SPRING_PROFILE_ACTIVE }} \
             --spring.datasource.url=${{ secrets.MYSQL_URL }} \
             --spring.datasource.username=${{ secrets.MYSQL_USER }} \
-            --spring.datasource.password=${{ secrets.MYSQL_PASSWORD }} > ~/cicd/deploy.log 2>&1 &
+            --spring.datasource.password=${{ secrets.MYSQL_PASSWORD }} > ~/app/deploy.log 2>&1 &
           "
 

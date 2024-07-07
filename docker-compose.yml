@@ -32,19 +32,11 @@ services:
   nginx-docker:
     image: nginx:latest
     container_name: 'swyp-nginx'
-    environment:
-      - HOST_PRIVATE_IP=${HOST_PRIVATE_IP}
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-    ports:
-      - "80:80"
-      - "443:443"
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./letsencrypt:/etc/letsencrypt
+    command: ["nginx", "-g", "daemon off;"]
     depends_on:
       - mysql-docker
       - redis-docker
-    networks:
-      - app-network
-
-networks:
-  app-network:
-    driver: bridge
+    network_mode: host
