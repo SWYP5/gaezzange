@@ -7,7 +7,7 @@
 
 # docker-volume 
 db/
-
+letsencrypt/
 
 # User-specific stuff
 .idea/**/workspace.xml
