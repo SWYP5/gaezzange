@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class GaezzangeApplication {
 
 	public static void main(String[] args) {
+//		System.setProperty("server.servlet.contextPath", "/api");
 		SpringApplication.run(GaezzangeApplication.class, args);
 	}
 

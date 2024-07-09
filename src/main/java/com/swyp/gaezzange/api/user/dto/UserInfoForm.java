@@ -9,8 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserInfoUpdateForm {
+public class UserInfoForm {
     private String nickname;
     private String profileImagePath;
     private String character;
+    private Boolean onboardingCompleted;
 }
