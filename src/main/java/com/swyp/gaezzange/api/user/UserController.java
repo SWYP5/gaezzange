@@ -18,7 +18,7 @@ public class UserController {
         return ApiResponse.success(new UserBasicInfoDto());
     }
 
-    @PostMapping("/my-info")
+    @PostMapping("/onboarding")
     public ApiResponse updateUserInfo(@RequestBody UserInfoForm form) {
         return ApiResponse.success(null);
     }

@@ -1,5 +1,6 @@
 package com.swyp.gaezzange.api.user.dto;
 
+import com.swyp.gaezzange.domain.character.UserCharacter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,5 +15,5 @@ public class UserBasicInfoDto {
     private String nickname;
     private String profileImagePath;
     private Boolean onboardingCompleted;
-    private String character;
+    private UserCharacter character;
 }
