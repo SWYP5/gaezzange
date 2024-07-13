@@ -12,8 +12,7 @@ letsencrypt/
 #env
 .env
 
-src/resources/*.properties
-
+.idea/**
 
 # User-specific stuff
 .idea/**/workspace.xml
@@ -21,6 +20,7 @@ src/resources/*.properties
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
+
 
 # AWS User-specific
 .idea/**/aws.xml
