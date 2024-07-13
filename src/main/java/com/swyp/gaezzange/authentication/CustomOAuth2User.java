@@ -38,6 +38,10 @@ public class CustomOAuth2User implements OAuth2User {
         return this.userAuth.getEmail();
     }
 
+    public Long getUserAuthId() {
+        return this.userAuth.getUserAuthId();
+    }
+
     public String getEmail() {
         return this.userAuth != null ? this.userAuth.getEmail() : null;
     }
