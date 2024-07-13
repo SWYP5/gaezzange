@@ -48,7 +48,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         // AccessToken 헤더에 설정
         response.setHeader("Authorization", "Bearer " + accessToken);
         response.setStatus(HttpStatus.OK.value());
-        response.sendRedirect("http://localhost:8080/hello");
+        response.sendRedirect("http://localhost:8080/api/hello");
     }
 
     private Cookie createCookie(String name, String value, int maxAge) {

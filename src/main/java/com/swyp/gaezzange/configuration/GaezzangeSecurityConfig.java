@@ -1,6 +1,7 @@
 package com.swyp.gaezzange.configuration;
 
 import com.swyp.gaezzange.authentication.CustomAuthenticationSuccessHandler;
+import com.swyp.gaezzange.authentication.CustomLogoutSuccessHandler;
 import com.swyp.gaezzange.authentication.CustomOAuth2UserService;
 import com.swyp.gaezzange.jwt.JWTFilter;
 import com.swyp.gaezzange.jwt.JWTUtil;
@@ -33,6 +34,7 @@ public class GaezzangeSecurityConfig {
 
     private final CustomOAuth2UserService customOAuth2UserService;
     private final CustomAuthenticationSuccessHandler authenticationSuccessHandler;
+    private final CustomLogoutSuccessHandler logoutSuccessHandler;
     private final JWTUtil jwtUtil;
 
     @Value("${jwt.secretKey}")
@@ -46,6 +48,7 @@ public class GaezzangeSecurityConfig {
                 .addFilterBefore(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class)
                 .authorizeHttpRequests(registry ->
                         registry.requestMatchers("/hello").permitAll()
+                                .requestMatchers("/logout").permitAll()
                                 .requestMatchers("/oauth2/**").permitAll()
                                 .requestMatchers("/swagger-ui/**").permitAll()
                                 .requestMatchers("/v3/api-docs/**").permitAll()
@@ -60,6 +63,7 @@ public class GaezzangeSecurityConfig {
                 .logout(logout ->
                         logout
                                 .logoutSuccessUrl("/login")
+                                .logoutSuccessHandler(logoutSuccessHandler)
                 );
 
         return http.build();
