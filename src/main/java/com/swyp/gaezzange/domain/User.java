@@ -1,5 +1,6 @@
 package com.swyp.gaezzange.domain;
 
+import com.swyp.gaezzange.domain.user.role.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,12 +26,12 @@ public class User {
     @Column(name = "nickname", unique = true)
     private String nickname;
 
-    private String role;
+    private UserRole role;
     private String provider;
     private String providerCode;
 
 
-    public static User createAuthUser(String email, String provider, String role, String providerCode) {
+    public static User createAuthUser(String email, String provider, UserRole role, String providerCode) {
         return User.builder()
                 .email(email)
                 .provider(provider)

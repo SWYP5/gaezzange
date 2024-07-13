@@ -1,5 +1,6 @@
 package com.swyp.gaezzange.authentication;
 
+import com.swyp.gaezzange.domain.user.role.UserRole;
 import com.swyp.gaezzange.jwt.JWTUtil;
 import com.swyp.gaezzange.domain.User;
 import com.swyp.gaezzange.repository.UserRepository;
@@ -39,7 +40,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private User createAuthUser(OAuth2Response response) {
-        User createUser = User.createAuthUser(response.getEmail(), response.getProvider(), "USER",response.getProviderId());
+        User createUser = User.createAuthUser(response.getEmail(), response.getProvider(), UserRole.USER, response.getProviderId());
         return userRepository.save(createUser);
     }
 
