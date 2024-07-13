@@ -12,6 +12,9 @@ letsencrypt/
 #env
 .env
 
+src/resources/*.properties
+
+
 # User-specific stuff
 .idea/**/workspace.xml
 .idea/**/tasks.xml
