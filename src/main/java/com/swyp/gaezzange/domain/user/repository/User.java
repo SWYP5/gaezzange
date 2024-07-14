@@ -1,8 +1,11 @@
 package com.swyp.gaezzange.domain.user.repository;
 
+import com.swyp.gaezzange.domain.tendency.Tendency;
 import com.swyp.gaezzange.util.jpa.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -40,4 +43,7 @@ public class User extends BaseTimeEntity {
 
   @Column
   private String profileImagePath;
+
+  @Enumerated(EnumType.STRING)
+  private Tendency tendency;
 }

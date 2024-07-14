@@ -14,5 +14,5 @@ public class UserBasicInfoDto {
     private String userId;
     private String nickname;
     private String profileImagePath;
-    private Tendency character;
+    private Tendency tendency;
 }
