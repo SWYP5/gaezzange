@@ -1,4 +1,4 @@
-package com.swyp.gaezzange.domain.routine.execution.repository;
+package com.swyp.gaezzange.domain.routine.repository;
 
 import com.swyp.gaezzange.domain.tendency.Tendency;
 import com.swyp.gaezzange.util.jpa.BaseTimeEntity;
