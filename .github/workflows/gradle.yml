@@ -2,7 +2,7 @@ name: Deploy Spring Boot Application
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "main_test" ]
 
 permissions:
   contents: read
