@@ -24,8 +24,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
   public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
     OAuth2User oAuth2User = super.loadUser(userRequest);
     String registrationId = userRequest.getClientRegistration().getRegistrationId();
-
     OAuth2Response oAuth2Response = getOAuth2Response(oAuth2User, registrationId);
+
     if (oAuth2Response == null) {
       return null;
     }
@@ -33,10 +33,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     String providerCode = oAuth2Response.getProviderId();
     UserAuth userAuth = userAuthRepository.findByProviderCode(providerCode)
         .orElseGet(() -> createUserAuth(oAuth2Response));
-
-    if (userAuth == null) {
-      throw new IllegalStateException("User cannot be null");
-    }
 
     return new CustomOAuth2User(userAuth);
   }
