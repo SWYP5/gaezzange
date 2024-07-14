@@ -14,6 +14,5 @@ public class UserBasicInfoDto {
     private String userId;
     private String nickname;
     private String profileImagePath;
-    private Boolean onboardingCompleted;
     private Tendency character;
 }

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -40,6 +41,10 @@ public class CustomOAuth2User implements OAuth2User {
 
     public Long getUserAuthId() {
         return this.userAuth.getUserAuthId();
+    }
+
+    public Long getUserId() {
+        return Optional.ofNullable(this.userAuth.getUser()).map(user -> user.getUserId()).orElse(null);
     }
 
     public String getEmail() {

@@ -5,6 +5,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,14 +15,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
-
-import javax.crypto.SecretKey;
-import java.io.IOException;
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -65,10 +59,11 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 
         String email = authentication.getName();
         String provider = customUserDetails.getProvider();
-        Long authUserId = customUserDetails.getUserAuthId();
+        Long userAuthId = customUserDetails.getUserAuthId();
+        Long userId = customUserDetails.getUserId();
         String role = roleNames.isEmpty() ? null : roleNames.get(0);
 
-        return jwtUtil.createJwt(category, authUserId, email, role, provider, refreshTokenExpirationTime);
+        return jwtUtil.createJwt(category, userAuthId, userId, email, role, provider, refreshTokenExpirationTime);
     }
 
 
