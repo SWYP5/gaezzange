@@ -18,8 +18,8 @@ import java.io.IOException;
 public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
 
 
-    @Value("${auth.logout.redirectUrl}")
-    private String redirectUrl;
+//    @Value("${auth.logout.redirectUrl}")
+//    private String redirectUrl;
 
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
@@ -27,7 +27,7 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
         String refreshTokenValue = extractRefreshToken(request.getCookies());
         deleteCookie(response, "refreshToken");
         response.setStatus(HttpServletResponse.SC_OK);
-        response.sendRedirect(redirectUrl);
+//        response.sendRedirect(redirectUrl);//테스트후 삭제..?
     }
     private String extractRefreshToken(Cookie[] cookies) {
         if (cookies != null) {
