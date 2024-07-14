@@ -19,7 +19,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "users",
+@Table(
+    name = "users",
     indexes = {
         @Index(name = "users_idx_01", columnList = "createdAt"),
         @Index(name = "users_idx_02", columnList = "updatedAt"),

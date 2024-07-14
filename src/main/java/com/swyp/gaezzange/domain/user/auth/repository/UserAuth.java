@@ -4,10 +4,12 @@ import com.swyp.gaezzange.domain.user.repository.User;
 import com.swyp.gaezzange.domain.user.role.UserRole;
 import com.swyp.gaezzange.util.jpa.BaseTimeEntity;
 import jakarta.persistence.Column;
+import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -26,7 +28,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "user_auths",
+@Table(
+    name = "user_auths",
     indexes = {
         @Index(name = "user_auths_idx_01", columnList = "createdAt"),
         @Index(name = "user_auths_idx_02", columnList = "updatedAt"),
@@ -44,7 +47,7 @@ public class UserAuth extends BaseTimeEntity {
   private Long userAuthId;
 
   @OneToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "userId", referencedColumnName = "userId", nullable = true)
+  @JoinColumn(name = "userId", referencedColumnName = "userId", nullable = true, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
   private User user;
 
   @Column(nullable = false)
