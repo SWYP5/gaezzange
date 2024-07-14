@@ -96,10 +96,10 @@ jobs:
             --spring.datasource.url=${{ secrets.MYSQL_URL }} \
             --spring.datasource.username=${{ secrets.MYSQL_USER }} \
             --spring.datasource.password=${{ secrets.MYSQL_PASSWORD }} \
-            --spring.security.oauth2.client.registration.google.client-id=${{ secrets.KAKAO_CLIENT_ID }} \
-            --spring.security.oauth2.client.registration.google.client-secret=${{ secrets.KAKAO_CLIENT_SECRET }} \
-            --spring.security.oauth2.client.registration.kakao.client-id=${{ secrets.GOOGLE_CLIENT_ID }} \
-            --spring.security.oauth2.client.registration.kakao.client-secret=${{ secrets.GOOGLE_CLIENT_SECRET }} \
+            --spring.security.oauth2.client.registration.google.client-id=${{ secrets.GOOGLE_CLIENT_ID }} \
+            --spring.security.oauth2.client.registration.google.client-secret=${{ secrets.GOOGLE_CLIENT_SECRET }} \
+            --spring.security.oauth2.client.registration.kakao.client-id=${{ secrets.KAKAO_CLIENT_ID }} \
+            --spring.security.oauth2.client.registration.kakao.client-secret=${{ secrets.KAKAO_CLIENT_SECRET }} \
             --jwt.secretKey=${{ secrets.JWT_SECRET }} > ~/app/deploy.log 2>&1 &
           "
 
