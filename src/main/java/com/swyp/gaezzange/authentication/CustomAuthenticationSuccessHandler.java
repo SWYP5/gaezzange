@@ -26,8 +26,8 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
     @Value("${jwt.refreshTokenExpirationTime}")
     private Long refreshTokenExpirationTime;
 
-//    @Value("${auth.success.redirectUrl}")
-//    private String redirectUrl;
+    @Value("${auth.success.redirectUrl}")
+    private String redirectUrl;
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String BEARER_PREFIX = "Bearer ";
@@ -41,7 +41,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         response.addCookie(createCookie("refreshToken", refreshToken, (int) (refreshTokenExpirationTime / 1000)));
         response.setHeader(AUTHORIZATION_HEADER, BEARER_PREFIX + accessToken);
         response.setStatus(HttpStatus.OK.value());
-//        response.sendRedirect(redirectUrl);//테스트후 삭제..?
+        response.sendRedirect(redirectUrl);//테스트후 삭제..?
     }
 
     private Cookie createCookie(String name, String value, int maxAge) {
