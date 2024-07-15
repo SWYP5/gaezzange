@@ -48,6 +48,7 @@ public class GaezzangeSecurityConfig {
                 .addFilterBefore(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class)
                 .authorizeHttpRequests(registry ->
                         registry.requestMatchers("/hello").permitAll()
+                                .requestMatchers("/token").permitAll()
                                 .requestMatchers("/oauth2/**").permitAll()
                                 .requestMatchers("/swagger-ui/**").permitAll()
                                 .requestMatchers("/v3/api-docs/**").permitAll()

@@ -1,5 +1,7 @@
 package com.swyp.gaezzange.authentication;
 
+import com.swyp.gaezzange.domain.user.repository.User;
+import com.swyp.gaezzange.domain.user.repository.UserRepository;
 import com.swyp.gaezzange.domain.user.role.UserRole;
 import com.swyp.gaezzange.jwt.JWTUtil;
 import com.swyp.gaezzange.domain.user.auth.repository.UserAuth;
