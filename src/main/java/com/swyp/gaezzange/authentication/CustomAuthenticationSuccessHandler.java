@@ -9,7 +9,7 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
     @Autowired
@@ -28,19 +29,12 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
     @Value("${jwt.refreshTokenExpirationTime}")
     private Long refreshTokenExpirationTime;
 
-//    @Value("${auth.success.redirectUrl}")
-//    private String redirectUrl;
-
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String BEARER_PREFIX = "Bearer ";
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        String redirectUrl = request.getParameter("redirect_url");
-
-        if (StringUtils.isBlank(redirectUrl)) {
-            throw new ServletException("redirect_url is empty");
-        }
+        String redirectUri = request.getParameter("redirect_uri");
 
         CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal();
         String accessToken = createJwtToken("access" ,authentication, customUserDetails);
@@ -53,7 +47,11 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         session.setAttribute("accessToken", accessToken);
 
         response.setStatus(HttpStatus.OK.value());
-        response.sendRedirect(redirectUrl);
+        if (redirectUri != null) {
+            response.sendRedirect(redirectUri);
+        }
+
+        log.info("Login success: {}", customUserDetails.getUserAuthId());
     }
 
     private Cookie createCookie(String name, String value, int maxAge) {
