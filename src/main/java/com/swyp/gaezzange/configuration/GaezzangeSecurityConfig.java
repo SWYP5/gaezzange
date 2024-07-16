@@ -4,6 +4,7 @@ import com.swyp.gaezzange.authentication.CustomAuthenticationFailureHandler;
 import com.swyp.gaezzange.authentication.CustomAuthenticationSuccessHandler;
 import com.swyp.gaezzange.authentication.CustomLogoutSuccessHandler;
 import com.swyp.gaezzange.authentication.CustomOAuth2UserService;
+import com.swyp.gaezzange.domain.user.auth.repository.AuthTokenRepository;
 import com.swyp.gaezzange.jwt.JWTFilter;
 import com.swyp.gaezzange.jwt.JWTUtil;
 import io.jsonwebtoken.security.Keys;
@@ -36,6 +37,7 @@ public class GaezzangeSecurityConfig {
   private final CustomAuthenticationSuccessHandler authenticationSuccessHandler;
   private final CustomLogoutSuccessHandler logoutSuccessHandler;
   private final JWTUtil jwtUtil;
+  private final AuthTokenRepository authTokenRepository;
 
 
   @Value("${jwt.secretKey}")
@@ -46,7 +48,7 @@ public class GaezzangeSecurityConfig {
     http
         .csrf(AbstractHttpConfigurer::disable)
         .cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource()))
-        .addFilterBefore(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class)
+        .addFilterBefore(new JWTFilter(jwtUtil, authTokenRepository), OAuth2LoginAuthenticationFilter.class)
         .authorizeHttpRequests(registry ->
             registry.requestMatchers("/hello").permitAll()
                 .requestMatchers("/oauth2/**").permitAll()

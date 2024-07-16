@@ -2,6 +2,8 @@ package com.swyp.gaezzange.domain.user.auth.repository;
 
 import com.swyp.gaezzange.util.jpa.BaseTimeEntity;
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,4 +26,6 @@ public class AuthToken extends BaseTimeEntity {
     private String email;
 
     private String token;
+
+    private Date expiresAt;
 }

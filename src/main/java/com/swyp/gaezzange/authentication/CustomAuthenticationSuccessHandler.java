@@ -9,9 +9,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,21 +55,23 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         session.setAttribute("accessToken", accessToken);
 
 
-        Optional<AuthToken> authTokenOptional = authTokenRepository.findAuthTokenByEmail(authentication.getName());
+//        Optional<AuthToken> authTokenOptional = authTokenRepository.findAuthTokenByEmail(authentication.getName());
 
-        if (authTokenOptional.isEmpty()) {
+//        if (authTokenOptional.isEmpty()) {
             AuthToken authToken = AuthToken.builder()
-                    .email(authentication.getName())
+                    .expiresAt(new Date(System.currentTimeMillis() + refreshTokenExpirationTime))
                     .token(refreshToken)
                     .build();
-            authTokenRepository.save(authToken);
-        }
 
-        response.setStatus(HttpStatus.OK.value());
-        if (redirectUri != null) {
+            AuthToken saveAuthToken = authTokenRepository.save(authToken);
+
+            response.setStatus(HttpStatus.OK.value());
+            response.sendRedirect("http://localhost:3000/token?tokenKey=" + saveAuthToken.getTokenId());
+//        }
+
+//        if (redirectUri != null) {
 //            response.sendRedirect(redirectUri);
-            response.sendRedirect("http://localhost:3000/token?email=" + authentication.getName());
-        }
+//        }
 
         log.info("Login success: {}", customUserDetails.getUserAuthId());
     }
