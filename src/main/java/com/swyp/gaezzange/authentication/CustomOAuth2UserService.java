@@ -1,9 +1,8 @@
 package com.swyp.gaezzange.authentication;
 
-import com.swyp.gaezzange.domain.user.role.UserRole;
-import com.swyp.gaezzange.jwt.JWTUtil;
 import com.swyp.gaezzange.domain.user.auth.repository.UserAuth;
 import com.swyp.gaezzange.domain.user.auth.repository.UserAuthRepository;
+import com.swyp.gaezzange.domain.user.role.UserRole;
 import com.swyp.gaezzange.util.OAuth2Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -45,9 +44,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
 
   private OAuth2Response getOAuth2Response(OAuth2User oAuth2User, String registrationId) {
-    if ("kakao".equals(registrationId)) {
+    if ("kakao".equals(registrationId) || "kakaol".equals(registrationId)) {
       return new KaKaoResponse(oAuth2User.getAttributes());
-    } else if ("google".equals(registrationId)) {
+    } else if ("google".equals(registrationId) || "googlel".equals(registrationId) ) {
       return new GoogleResponse(oAuth2User.getAttributes());
     }
     return null;

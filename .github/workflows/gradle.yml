@@ -2,7 +2,7 @@ name: Deploy Spring Boot Application
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "main_test" ]
 
 permissions:
   contents: read
@@ -100,6 +100,8 @@ jobs:
             --spring.security.oauth2.client.registration.google.client-secret=${{ secrets.GOOGLE_CLIENT_SECRET }} \
             --spring.security.oauth2.client.registration.kakao.client-id=${{ secrets.KAKAO_CLIENT_ID }} \
             --spring.security.oauth2.client.registration.kakao.client-secret=${{ secrets.KAKAO_CLIENT_SECRET }} \
+            --spring.security.oauth2.client.registration.kakaol.client-id=${{ secrets.KAKAO_CLIENT_ID }} \
+            --spring.security.oauth2.client.registration.kakaol.client-secret=${{ secrets.KAKAO_CLIENT_SECRET }} \
             --jwt.secretKey=${{ secrets.JWT_SECRET }} > ~/app/deploy.log 2>&1 &
           "
 

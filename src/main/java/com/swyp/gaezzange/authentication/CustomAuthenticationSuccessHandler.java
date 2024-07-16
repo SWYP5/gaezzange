@@ -5,9 +5,11 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
     @Autowired
@@ -26,22 +29,29 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
     @Value("${jwt.refreshTokenExpirationTime}")
     private Long refreshTokenExpirationTime;
 
-//    @Value("${auth.success.redirectUrl}")
-//    private String redirectUrl;
-
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String BEARER_PREFIX = "Bearer ";
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+        String redirectUri = request.getParameter("redirect_uri");
+
         CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal();
         String accessToken = createJwtToken("access" ,authentication, customUserDetails);
         String refreshToken = createJwtToken("refresh" ,authentication, customUserDetails);
 
         response.addCookie(createCookie("refreshToken", refreshToken, (int) (refreshTokenExpirationTime / 1000)));
         response.setHeader(AUTHORIZATION_HEADER, BEARER_PREFIX + accessToken);
+
+        HttpSession session = request.getSession();
+        session.setAttribute("accessToken", accessToken);
+
         response.setStatus(HttpStatus.OK.value());
-        response.sendRedirect("http://localhost:3000");//테스트후 삭제..?
+        if (redirectUri != null) {
+            response.sendRedirect(redirectUri);
+        }
+
+        log.info("Login success: {}", customUserDetails.getUserAuthId());
     }
 
     private Cookie createCookie(String name, String value, int maxAge) {
