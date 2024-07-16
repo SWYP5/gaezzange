@@ -35,11 +35,6 @@ public class JWTFilter extends OncePerRequestFilter {
             return;
         }
 
-        if (requestUri.matches("^\\/api/token(?:\\/.*)?$")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
         String accessToken = request.getHeader("Authorization");
         if (accessToken != null && accessToken.startsWith("Bearer ")) {
             accessToken = accessToken.substring(7);

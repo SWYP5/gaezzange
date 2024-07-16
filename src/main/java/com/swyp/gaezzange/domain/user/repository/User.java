@@ -27,10 +27,10 @@ import lombok.NoArgsConstructor;
     indexes = {
         @Index(name = "users_idx_01", columnList = "createdAt"),
         @Index(name = "users_idx_02", columnList = "updatedAt"),
+    },
+    uniqueConstraints = {
+        @UniqueConstraint(name = "users_uk_01", columnNames = "nickname")
     }
-//    uniqueConstraints = {
-//        @UniqueConstraint(name = "users_uk_01", columnNames = "nickname")
-//    }
 )
 public class User extends BaseTimeEntity {
 
@@ -46,10 +46,4 @@ public class User extends BaseTimeEntity {
 
   @Enumerated(EnumType.STRING)
   private Tendency tendency;
-
-  @Column
-  private String email;
-
-  @Column
-  private String token;
 }

@@ -1,9 +1,5 @@
 package com.swyp.gaezzange.authentication;
 
-import com.swyp.gaezzange.domain.tendency.Tendency;
-import com.swyp.gaezzange.domain.user.auth.repository.UserAuthRepository;
-import com.swyp.gaezzange.domain.user.repository.User;
-import com.swyp.gaezzange.domain.user.repository.UserRepository;
 import com.swyp.gaezzange.jwt.JWTUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -11,8 +7,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,8 +26,6 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
     @Value("${jwt.refreshTokenExpirationTime}")
     private Long refreshTokenExpirationTime;
 
-    private final UserRepository userRepository;
-
 //    @Value("${auth.success.redirectUrl}")
 //    private String redirectUrl;
 
@@ -49,21 +41,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         response.addCookie(createCookie("refreshToken", refreshToken, (int) (refreshTokenExpirationTime / 1000)));
         response.setHeader(AUTHORIZATION_HEADER, BEARER_PREFIX + accessToken);
         response.setStatus(HttpStatus.OK.value());
-
-        Optional<User> optionalUser = userRepository.findByEmail(authentication.getName());
-
-        if (!optionalUser.isPresent()) {
-            User user = User.builder()
-                    .nickname(authentication.getName())
-                    .token(refreshToken)
-                    .tendency(Tendency.BAEZZANGE)
-                    .email(authentication.getName())
-                    .build();
-
-            userRepository.save(user);
-        }
-//        response.sendRedirect("/api/token?email="+authentication.getName());//테스트후 삭제..?
-        response.sendRedirect("http://localhost:3000/token?email="+authentication.getName());//테스트후 삭제..?
+        response.sendRedirect("http://localhost:3000");//테스트후 삭제..?
     }
 
     private Cookie createCookie(String name, String value, int maxAge) {
