@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(
-        name = "commnets"
+        name = "comments"
 )
 public class Comment extends BaseTimeEntity {
 
