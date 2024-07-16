@@ -50,6 +50,8 @@ public class GaezzangeSecurityConfig {
         .authorizeHttpRequests(registry ->
             registry.requestMatchers("/hello").permitAll()
                 .requestMatchers("/oauth2/**").permitAll()
+                .requestMatchers("/api/v1/auth/**").permitAll()
+                .requestMatchers("/api/token/**").permitAll()
                 .requestMatchers("/login/**").permitAll()
                 .requestMatchers("/swagger-ui/**").permitAll()
                 .requestMatchers("/v3/api-docs/**").permitAll()

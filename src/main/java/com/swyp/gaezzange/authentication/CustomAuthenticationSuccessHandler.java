@@ -1,5 +1,7 @@
 package com.swyp.gaezzange.authentication;
 
+import com.swyp.gaezzange.domain.user.auth.repository.AuthToken;
+import com.swyp.gaezzange.domain.user.auth.repository.AuthTokenRepository;
 import com.swyp.gaezzange.jwt.JWTUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -8,6 +10,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +33,8 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
     @Value("${jwt.refreshTokenExpirationTime}")
     private Long refreshTokenExpirationTime;
 
+    private final AuthTokenRepository authTokenRepository;
+
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String BEARER_PREFIX = "Bearer ";
 
@@ -46,9 +52,21 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         HttpSession session = request.getSession();
         session.setAttribute("accessToken", accessToken);
 
+
+        Optional<AuthToken> authTokenOptional = authTokenRepository.findAuthTokenByEmail(authentication.getName());
+
+        if (authTokenOptional.isEmpty()) {
+            AuthToken authToken = AuthToken.builder()
+                    .email(authentication.getName())
+                    .token(refreshToken)
+                    .build();
+            authTokenRepository.save(authToken);
+        }
+
         response.setStatus(HttpStatus.OK.value());
         if (redirectUri != null) {
-            response.sendRedirect(redirectUri);
+//            response.sendRedirect(redirectUri);
+            response.sendRedirect("http://localhost:3000/token?email=" + authentication.getName());
         }
 
         log.info("Login success: {}", customUserDetails.getUserAuthId());
