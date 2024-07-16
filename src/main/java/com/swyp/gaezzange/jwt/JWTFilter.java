@@ -3,13 +3,13 @@ package com.swyp.gaezzange.jwt;
 import com.swyp.gaezzange.domain.user.auth.repository.AuthToken;
 import com.swyp.gaezzange.domain.user.auth.repository.AuthTokenRepository;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Date;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -17,9 +17,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.web.filter.OncePerRequestFilter;
-
-import javax.crypto.SecretKey;
-import java.io.IOException;
 
 @RequiredArgsConstructor
 public class JWTFilter extends OncePerRequestFilter {
@@ -43,7 +40,7 @@ public class JWTFilter extends OncePerRequestFilter {
         if (requestUri.matches("^\\/api/token(?:\\/.*)?$")) {
             String tokenKey = request.getParameter("tokenKey");
             Optional<AuthToken> optionalAuthToken = authTokenRepository.findById(tokenKey);
-            optionalAuthToken.filter(token -> token.getExpiresAt().before(new Date()))
+            optionalAuthToken.filter(token -> token.getExpiresAt().after(new Date()))
                 .ifPresentOrElse(
                     token -> response.setHeader("Authorization", "Bearer " + token.getToken()),
                     ()-> { throw new RuntimeException("만료"); }
