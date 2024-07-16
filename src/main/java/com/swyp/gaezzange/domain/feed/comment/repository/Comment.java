@@ -29,16 +29,15 @@ public class Comment extends BaseTimeEntity {
     @Column(nullable = false)
     private Long feedId;
 
+    @Column(nullable = false)
+    private String content;
+
     @ManyToOne
     @JoinColumn(name = "parent_comment_id")
-    @Column(nullable = true)
     private Comment parentComment;
 
     @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL)
     private List<Comment> childComments;
-
-    @Column(nullable = false)
-    private String content;
 
     @Column(columnDefinition = "TINYINT(1)", nullable = false)
     private boolean deleted;
