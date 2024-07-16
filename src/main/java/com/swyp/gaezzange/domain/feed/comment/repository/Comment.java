@@ -33,7 +33,7 @@ public class Comment extends BaseTimeEntity {
     private String content;
 
     @ManyToOne
-    @JoinColumn(name = "parent_comment_id")
+    @JoinColumn(name = "parentCommentId")
     private Comment parentComment;
 
     @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL)
