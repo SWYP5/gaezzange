@@ -11,9 +11,6 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
-
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +63,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
             AuthToken saveAuthToken = authTokenRepository.save(authToken);
 
             response.setStatus(HttpStatus.OK.value());
-            response.sendRedirect("http://localhost:3000/token?tokenKey=" + saveAuthToken.getTokenId());
+            response.sendRedirect("http://localdev.com:3000/token?tokenKey=" + saveAuthToken.getTokenId());
 //        }
 
 //        if (redirectUri != null) {

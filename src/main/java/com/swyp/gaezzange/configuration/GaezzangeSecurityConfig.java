@@ -81,7 +81,7 @@ public class GaezzangeSecurityConfig {
       config.setAllowedHeaders(Collections.singletonList("*"));
       config.setAllowedMethods(Collections.singletonList("*"));
       config.setAllowedOriginPatterns(
-          List.of("http://localhost:3000", "https://gaejjange.swygbro.com"));
+          List.of("http://localhost:3000", "https://gaejjange.swygbro.com", "http://localdev.com:3000"));
       config.setAllowCredentials(true);
 
       return config;
