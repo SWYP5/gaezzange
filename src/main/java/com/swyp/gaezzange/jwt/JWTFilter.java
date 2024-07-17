@@ -34,7 +34,7 @@ public class JWTFilter extends OncePerRequestFilter {
       return;
     }
 
-    if (requestUri.matches("^\\/api/token(?:\\/.*)?$")) {
+    if (requestUri.matches("^\\/api/v1/auth/token(?:\\/.*)?$")) {
       setTokenAfterLogin(request, response);
       filterChain.doFilter(request, response);
       return;
