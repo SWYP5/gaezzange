@@ -50,11 +50,10 @@ public class GaezzangeSecurityConfig {
         .cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource()))
         .addFilterBefore(new JWTFilter(jwtUtil, authTokenRepository), OAuth2LoginAuthenticationFilter.class)
         .authorizeHttpRequests(registry ->
-            registry.requestMatchers("/hello").permitAll()
+            registry.requestMatchers("/api/hello").permitAll()
                 .requestMatchers("/oauth2/**").permitAll()
                 .requestMatchers("/api/v1/feed/**").permitAll()
                 .requestMatchers("/api/v1/auth/**").permitAll()
-                .requestMatchers("/api/token/**").permitAll()
                 .requestMatchers("/login/**").permitAll()
                 .requestMatchers("/swagger-ui/**").permitAll()
                 .requestMatchers("/v3/api-docs/**").permitAll()

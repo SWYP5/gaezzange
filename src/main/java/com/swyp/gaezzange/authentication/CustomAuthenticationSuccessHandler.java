@@ -9,7 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,7 +50,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         session.setAttribute("accessToken", accessToken);
 
         AuthToken authToken = AuthToken.builder()
-                .expiresAt(new Date(System.currentTimeMillis() + refreshTokenExpirationTime))
+                .expiresAt(LocalDateTime.now().plusSeconds(10))
                 .token(refreshToken)
                 .build();
 
