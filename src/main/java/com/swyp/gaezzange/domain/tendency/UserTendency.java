@@ -1,6 +1,6 @@
 package com.swyp.gaezzange.domain.tendency;
 
-public enum Tendency {
+public enum UserTendency {
   BAEZZANGE,
   GAEMI,
 }

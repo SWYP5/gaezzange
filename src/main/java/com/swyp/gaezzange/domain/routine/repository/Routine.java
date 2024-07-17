@@ -1,6 +1,6 @@
 package com.swyp.gaezzange.domain.routine.repository;
 
-import com.swyp.gaezzange.domain.tendency.Tendency;
+import com.swyp.gaezzange.domain.tendency.UserTendency;
 import com.swyp.gaezzange.util.jpa.BaseTimeEntity;
 import com.swyp.gaezzange.util.jpa.DaysOfWeekConverter;
 import jakarta.persistence.Column;
@@ -46,7 +46,7 @@ public class Routine extends BaseTimeEntity {
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
-  private Tendency tendency;
+  private UserTendency tendency;
 
   @Column(nullable = false)
   private String name;
