@@ -1,13 +1,18 @@
 package com.swyp.gaezzange.api.feed;
 
+import com.swyp.gaezzange.api.feed.dto.feed.FeedDetailDto;
 import com.swyp.gaezzange.api.feed.dto.feed.FeedDto;
 import com.swyp.gaezzange.api.feed.dto.feed.FeedForm;
+import com.swyp.gaezzange.api.feed.dto.feed.FeedSearchDto;
 import com.swyp.gaezzange.authentication.CustomOAuth2User;
+import com.swyp.gaezzange.domain.tendency.Tendency;
 import com.swyp.gaezzange.domain.user.auth.repository.UserAuth;
 import com.swyp.gaezzange.service.feed.FeedLikeService;
 import com.swyp.gaezzange.service.feed.FeedService;
 import com.swyp.gaezzange.util.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,40 +34,45 @@ public class FeedController {
     private final FeedService feedService;
     private final FeedLikeService feedLikeService;
 
-    @GetMapping("/v1/feed/{feedId}")
-    public ApiResponse<FeedDto> getDetailByFeedId(@PathVariable Long feedId) {
-        return ApiResponse.success(new FeedDto());
+    @GetMapping("/{feedId}")
+    public ApiResponse<FeedDetailDto> getDetailByFeedId(@PathVariable Long feedId) {
+        return ApiResponse.success(feedService.getFeed(feedId));
     }
 
-    @PostMapping("/v1/feed")
-    public ApiResponse<FeedDto> registerFeed(@AuthenticationPrincipal CustomOAuth2User userAuth, @RequestBody FeedForm feedForm) {
+    @GetMapping()
+    public ApiResponse<List<FeedDto>> getAllFeed(FeedSearchDto feedSearchDto) {
+        return ApiResponse.success(feedService.getAllFeed(feedSearchDto));
+    }
+
+    @PostMapping()
+    public ApiResponse<FeedDetailDto> registerFeed(@AuthenticationPrincipal CustomOAuth2User userAuth, @RequestBody FeedForm feedForm) {
         long testId = (long) SecurityContextHolder.getContext().getAuthentication().getCredentials();
         feedService.registerFeed(testId, feedForm);;
         return ApiResponse.success(null);
     }
 
-    @PutMapping("/v1/feed/{feedId}")
-    public ApiResponse<FeedDto> updateFeed(@AuthenticationPrincipal UserAuth userAuth, @PathVariable String feedId, @RequestBody FeedForm feedForm) {
+    @PutMapping("/{feedId}")
+    public ApiResponse<FeedDetailDto> updateFeed(@AuthenticationPrincipal UserAuth userAuth, @PathVariable String feedId, @RequestBody FeedForm feedForm) {
         long testId = (long) SecurityContextHolder.getContext().getAuthentication().getCredentials();
         feedService.updateFeed(testId, feedId, feedForm);
         return ApiResponse.success(null);
     }
 
-    @DeleteMapping("/v1/feed/{feedId}")
-    public ApiResponse<FeedDto> deleteFeed(@AuthenticationPrincipal UserAuth userAuth, @PathVariable String feedId) {
+    @DeleteMapping("/{feedId}")
+    public ApiResponse<FeedDetailDto> deleteFeed(@AuthenticationPrincipal UserAuth userAuth, @PathVariable String feedId) {
         long testId = (long) SecurityContextHolder.getContext().getAuthentication().getCredentials();
         feedService.deleteFeed(testId, feedId);
         return ApiResponse.success(null);
     }
 
-    @PostMapping("/v1/feed/{feedId}/like")
+    @PostMapping("/{feedId}/like")
     public ApiResponse<String> likeFeed(@PathVariable Long feedId, @AuthenticationPrincipal UserAuth userAuth) {
         long testId = (long) SecurityContextHolder.getContext().getAuthentication().getCredentials();
         feedLikeService.like(testId, String.valueOf(feedId));
         return ApiResponse.success(null);
     }
 
-    @DeleteMapping("/v1/feed/{feedId}/unlike")
+    @DeleteMapping("/{feedId}/unlike")
     public ApiResponse<String> unlikeFeed(@PathVariable Long feedId, @AuthenticationPrincipal UserAuth userAuth) {
         long testId = (long) SecurityContextHolder.getContext().getAuthentication().getCredentials();
         feedLikeService.unlike(testId, String.valueOf(feedId));
