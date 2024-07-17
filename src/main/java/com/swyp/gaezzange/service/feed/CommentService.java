@@ -50,6 +50,10 @@ public class CommentService {
   }
 
   private Optional<Comment> getOptionalComment(String commentId) {
-    return commentRepository.findById(Long.valueOf(commentId));
+    if (commentId == null) {
+      return Optional.empty();
+    } else {
+      return commentRepository.findById(Long.valueOf(commentId));
+    }
   }
 }

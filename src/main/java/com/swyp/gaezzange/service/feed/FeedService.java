@@ -14,11 +14,13 @@ public class FeedService {
   private final FeedRepository feedRepository;
 
   public void registerFeed(long userId, FeedForm feedForm) {
+    System.out.println(feedForm.toString());
     Feed feed = Feed.builder()
         .userId(userId)
         .tendency(feedForm.getTendency())
         .category(feedForm.getCategory())
         .content(feedForm.getContent())
+        .deleted(false)
         .build();
     feedRepository.save(feed);
   }

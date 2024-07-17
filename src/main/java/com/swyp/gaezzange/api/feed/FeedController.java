@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,35 +35,37 @@ public class FeedController {
     }
 
     @PostMapping("/v1/feed")
-    public ApiResponse<FeedDto> registerFeed(@AuthenticationPrincipal CustomOAuth2User userAuth, FeedForm feedForm) {
-//        feedService.registerFeed(userAuth.getUser().getUserId(), feedForm);
-        System.out.println(SecurityContextHolder.getContext().getAuthentication());
-
-        System.out.println(userAuth);
+    public ApiResponse<FeedDto> registerFeed(@AuthenticationPrincipal CustomOAuth2User userAuth, @RequestBody FeedForm feedForm) {
+        long testId = (long) SecurityContextHolder.getContext().getAuthentication().getCredentials();
+        feedService.registerFeed(testId, feedForm);;
         return ApiResponse.success(null);
     }
 
     @PutMapping("/v1/feed/{feedId}")
-    public ApiResponse<FeedDto> updateFeed(@AuthenticationPrincipal UserAuth userAuth, @PathVariable String feedId, FeedForm feedForm) {
-        feedService.updateFeed(userAuth.getUser().getUserId(), feedId, feedForm);
+    public ApiResponse<FeedDto> updateFeed(@AuthenticationPrincipal UserAuth userAuth, @PathVariable String feedId, @RequestBody FeedForm feedForm) {
+        long testId = (long) SecurityContextHolder.getContext().getAuthentication().getCredentials();
+        feedService.updateFeed(testId, feedId, feedForm);
         return ApiResponse.success(null);
     }
 
     @DeleteMapping("/v1/feed/{feedId}")
     public ApiResponse<FeedDto> deleteFeed(@AuthenticationPrincipal UserAuth userAuth, @PathVariable String feedId) {
-        feedService.deleteFeed(userAuth.getUser().getUserId(), feedId);
+        long testId = (long) SecurityContextHolder.getContext().getAuthentication().getCredentials();
+        feedService.deleteFeed(testId, feedId);
         return ApiResponse.success(null);
     }
 
     @PostMapping("/v1/feed/{feedId}/like")
     public ApiResponse<String> likeFeed(@PathVariable Long feedId, @AuthenticationPrincipal UserAuth userAuth) {
-        feedLikeService.like(userAuth.getUser().getUserId(), String.valueOf(feedId));
+        long testId = (long) SecurityContextHolder.getContext().getAuthentication().getCredentials();
+        feedLikeService.like(testId, String.valueOf(feedId));
         return ApiResponse.success(null);
     }
 
     @DeleteMapping("/v1/feed/{feedId}/unlike")
     public ApiResponse<String> unlikeFeed(@PathVariable Long feedId, @AuthenticationPrincipal UserAuth userAuth) {
-        feedLikeService.unlike(userAuth.getUser().getUserId(), String.valueOf(feedId));
+        long testId = (long) SecurityContextHolder.getContext().getAuthentication().getCredentials();
+        feedLikeService.unlike(testId, String.valueOf(feedId));
         return ApiResponse.success(null);
     }
 
