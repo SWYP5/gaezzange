@@ -34,14 +34,14 @@ public class FeedController {
     private final FeedService feedService;
     private final FeedLikeService feedLikeService;
 
-    @GetMapping("/{feedId}")
-    public ApiResponse<FeedDetailDto> getDetailByFeedId(@PathVariable Long feedId) {
-        return ApiResponse.success(feedService.getFeed(feedId));
-    }
-
     @GetMapping()
     public ApiResponse<List<FeedDto>> getAllFeed(FeedSearchDto feedSearchDto) {
         return ApiResponse.success(feedService.getAllFeed(feedSearchDto));
+    }
+
+    @GetMapping("/{feedId}")
+    public ApiResponse<FeedDetailDto> getDetailByFeedId(@PathVariable Long feedId) {
+        return ApiResponse.success(feedService.getFeed(feedId));
     }
 
     @PostMapping()
@@ -72,7 +72,7 @@ public class FeedController {
         return ApiResponse.success(null);
     }
 
-    @DeleteMapping("/{feedId}/unlike")
+    @PostMapping("/{feedId}/unlike")
     public ApiResponse<String> unlikeFeed(@PathVariable Long feedId, @AuthenticationPrincipal UserAuth userAuth) {
         long testId = (long) SecurityContextHolder.getContext().getAuthentication().getCredentials();
         feedLikeService.unlike(testId, String.valueOf(feedId));

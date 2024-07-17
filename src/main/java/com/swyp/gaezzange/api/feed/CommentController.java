@@ -65,7 +65,7 @@ public class CommentController {
     return ApiResponse.success(null);
   }
 
-  @DeleteMapping("/v1/feed/{feedId}/{commentId}/unlike")
+  @PostMapping("/v1/feed/{feedId}/{commentId}/unlike")
   public ApiResponse<String> unlikeComment(@PathVariable Long commentId, @AuthenticationPrincipal UserAuth userAuth) {
     long testId = (long) SecurityContextHolder.getContext().getAuthentication().getCredentials();
     commentLikeService.unlike(testId, String.valueOf(commentId));
