@@ -1,4 +1,4 @@
-package com.swyp.gaezzange.api.feed.dto;
+package com.swyp.gaezzange.api.feed.dto.feed;
 
 import com.swyp.gaezzange.domain.category.Category;
 import com.swyp.gaezzange.domain.tendency.Tendency;

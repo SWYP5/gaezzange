@@ -39,4 +39,18 @@ public class Feed extends BaseTimeEntity {
 
     @Column(columnDefinition = "TINYINT(1)", nullable = false)
     private boolean deleted;
+
+    public boolean validateUserId(long userId) {
+        return userId == this.userId;
+    }
+
+    public void updateFeed(Tendency tendency, Category category, String content) {
+        this.tendency = tendency;
+        this.category = category;
+        this.content = content;
+    }
+
+    public void deleteFeed() {
+        this.deleted = true;
+    }
 }

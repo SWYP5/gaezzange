@@ -41,4 +41,16 @@ public class Comment extends BaseTimeEntity {
 
     @Column(columnDefinition = "TINYINT(1)", nullable = false)
     private boolean deleted;
+
+    public boolean validateUserId(long userId) {
+        return userId == this.userId;
+    }
+
+    public void updateContent(String content) {
+        this.content = content;
+    }
+
+    public void deleteComment() {
+        this.deleted = true;
+    }
 }

@@ -1,5 +1,6 @@
-package com.swyp.gaezzange.api.feed.dto;
+package com.swyp.gaezzange.api.feed.dto.feed;
 
+import com.swyp.gaezzange.api.feed.dto.comment.CommentForm;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,7 +12,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FeedForm {
+public class FeedDto {
     private String userId;
     private String nickname;
     private String profileImagePath;

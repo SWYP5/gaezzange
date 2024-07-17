@@ -22,8 +22,15 @@ public class CommentLike extends BaseTimeEntity {
     private Long commentLikeId;
 
     @Column(nullable = false)
+    private Long userId;
+
+    @Column(nullable = false)
     private Long commentId;
 
     @Column(columnDefinition = "TINYINT(1)", nullable = false)
     private boolean deleted;
+
+    public void toggleLike() {
+        this.deleted = !this.deleted;
+    }
 }

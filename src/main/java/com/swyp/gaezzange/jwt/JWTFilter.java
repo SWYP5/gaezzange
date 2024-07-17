@@ -2,6 +2,7 @@ package com.swyp.gaezzange.jwt;
 
 import com.swyp.gaezzange.domain.user.auth.repository.AuthToken;
 import com.swyp.gaezzange.domain.user.auth.repository.AuthTokenRepository;
+import com.swyp.gaezzange.domain.user.auth.repository.UserAuthRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import jakarta.servlet.FilterChain;
@@ -78,9 +79,11 @@ public class JWTFilter extends OncePerRequestFilter {
 
     private void setSecurityContextByToken(String token) {
         Jws<Claims> claimsJws = jwtUtil.parseClaims(token);
+        String userId = claimsJws.getBody().get("userId", String.class);
         String email = claimsJws.getBody().get("email", String.class);
         String role = claimsJws.getBody().get("role", String.class);
         String provider = claimsJws.getBody().get("provider", String.class);
+
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(email, null, jwtUtil.getAuthorities(role));
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }

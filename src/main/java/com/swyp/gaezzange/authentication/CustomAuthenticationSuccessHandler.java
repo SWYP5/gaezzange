@@ -77,7 +77,6 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         List<String> roleNames = customUserDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .toList();
-
         String email = authentication.getName();
         String provider = customUserDetails.getProvider();
         Long userAuthId = customUserDetails.getUserAuthId();

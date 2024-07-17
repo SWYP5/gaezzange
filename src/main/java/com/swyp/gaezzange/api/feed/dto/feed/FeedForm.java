@@ -1,4 +1,4 @@
-package com.swyp.gaezzange.api.feed.dto;
+package com.swyp.gaezzange.api.feed.dto.feed;
 
 import com.swyp.gaezzange.domain.category.Category;
 import com.swyp.gaezzange.domain.tendency.Tendency;
@@ -12,8 +12,9 @@ import org.springframework.web.multipart.MultipartFile;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FeedUpdateDto {
+public class FeedForm {
     private Tendency tendency;
     private Category category;
+    private String content;
     private MultipartFile feedImage;
 }

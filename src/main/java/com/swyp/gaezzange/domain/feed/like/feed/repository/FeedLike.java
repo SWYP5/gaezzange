@@ -24,6 +24,14 @@ public class FeedLike extends BaseTimeEntity {
     @Column(nullable = false)
     private Long feedId;
 
+    @Column(nullable = false)
+    private Long userId;
+
     @Column(columnDefinition = "TINYINT(1)", nullable = false)
     private boolean deleted;
+
+    public void toggleLike() {
+        this.deleted = !this.deleted;
+    }
+
 }
