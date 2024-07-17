@@ -65,18 +65,10 @@ public class FeedController {
         return ApiResponse.success(null);
     }
 
-    @PostMapping("/{feedId}/like")
+    @PostMapping("/{feedId}/like-toggle")
     public ApiResponse<String> likeFeed(@PathVariable Long feedId, @AuthenticationPrincipal UserAuth userAuth) {
         long testId = (long) SecurityContextHolder.getContext().getAuthentication().getCredentials();
-        feedLikeService.like(testId, String.valueOf(feedId));
+        feedLikeService.toggleLike(testId, String.valueOf(feedId));
         return ApiResponse.success(null);
     }
-
-    @PostMapping("/{feedId}/unlike")
-    public ApiResponse<String> unlikeFeed(@PathVariable Long feedId, @AuthenticationPrincipal UserAuth userAuth) {
-        long testId = (long) SecurityContextHolder.getContext().getAuthentication().getCredentials();
-        feedLikeService.unlike(testId, String.valueOf(feedId));
-        return ApiResponse.success(null);
-    }
-
 }

@@ -58,18 +58,10 @@ public class CommentController {
     return ApiResponse.success(null);
   }
 
-  @PostMapping("/v1/feed/{feedId}/{commentId}/like")
+  @PostMapping("/v1/feed/{feedId}/{commentId}/like-toggle")
   public ApiResponse<String> likeComment(@PathVariable Long commentId, @AuthenticationPrincipal UserAuth userAuth) {
     long testId = (long) SecurityContextHolder.getContext().getAuthentication().getCredentials();
-    commentLikeService.like(testId, String.valueOf(commentId));
+    commentLikeService.toggleLike(testId, String.valueOf(commentId));
     return ApiResponse.success(null);
   }
-
-  @PostMapping("/v1/feed/{feedId}/{commentId}/unlike")
-  public ApiResponse<String> unlikeComment(@PathVariable Long commentId, @AuthenticationPrincipal UserAuth userAuth) {
-    long testId = (long) SecurityContextHolder.getContext().getAuthentication().getCredentials();
-    commentLikeService.unlike(testId, String.valueOf(commentId));
-    return ApiResponse.success(null);
-  }
-
 }

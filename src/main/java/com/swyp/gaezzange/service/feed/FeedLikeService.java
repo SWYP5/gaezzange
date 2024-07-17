@@ -32,7 +32,7 @@ public class FeedLikeService extends AbstractLikeService<FeedLike> {
   }
 
   @Override
-  protected void toggleLike(FeedLike like) {
+  protected void toggleLikeStatus(FeedLike like) {
     like.toggleLike();
   }
 

@@ -32,7 +32,7 @@ public class CommentLikeService extends AbstractLikeService<CommentLike>{
   }
 
   @Override
-  protected void toggleLike(CommentLike like) {
+  protected void toggleLikeStatus(CommentLike like) {
     like.toggleLike();
   }
 }
