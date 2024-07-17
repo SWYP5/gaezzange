@@ -9,7 +9,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 public class GaezzangeApplication {
 
 	public static void main(String[] args) {
-//		System.setProperty("server.servlet.contextPath", "/api");
 		SpringApplication.run(GaezzangeApplication.class, args);
 	}
 

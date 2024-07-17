@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class CustomOAuth2UserService extends DefaultOAuth2UserService {
+public class OAuth2UserAuthProvider extends DefaultOAuth2UserService {
 
   private final UserAuthService userAuthService;
 
@@ -46,7 +46,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     return userAuthService.saveUserAuth(createdUserAuth);
   }
-
 
   private OAuth2Response getOAuth2Response(OAuth2User oAuth2User, String registrationId) {
     if ("kakao".equals(registrationId)) {

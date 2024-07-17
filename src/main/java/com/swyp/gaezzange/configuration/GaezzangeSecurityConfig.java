@@ -3,7 +3,7 @@ package com.swyp.gaezzange.configuration;
 import com.swyp.gaezzange.authentication.CustomAuthenticationFailureHandler;
 import com.swyp.gaezzange.authentication.CustomAuthenticationSuccessHandler;
 import com.swyp.gaezzange.authentication.CustomLogoutSuccessHandler;
-import com.swyp.gaezzange.authentication.CustomOAuth2UserService;
+import com.swyp.gaezzange.authentication.OAuth2UserAuthProvider;
 import com.swyp.gaezzange.domain.user.auth.repository.AuthTokenRepository;
 import com.swyp.gaezzange.jwt.JWTFilter;
 import com.swyp.gaezzange.jwt.JWTUtil;
@@ -33,8 +33,9 @@ import org.springframework.web.cors.CorsConfigurationSource;
 @RequiredArgsConstructor
 public class GaezzangeSecurityConfig {
 
-  private final CustomOAuth2UserService customOAuth2UserService;
+  private final OAuth2UserAuthProvider oAuth2UserAuthProvider;
   private final CustomAuthenticationSuccessHandler authenticationSuccessHandler;
+  private final CustomAuthenticationFailureHandler authenticationFailureHandler;
   private final CustomLogoutSuccessHandler logoutSuccessHandler;
   private final JWTUtil jwtUtil;
   private final AuthTokenRepository authTokenRepository;
@@ -48,6 +49,7 @@ public class GaezzangeSecurityConfig {
     http
         .csrf(AbstractHttpConfigurer::disable)
         .cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource()))
+        .exceptionHandling(httpSecurityExceptionHandlingConfigurer -> {})
         .addFilterBefore(new JWTFilter(jwtUtil, authTokenRepository), OAuth2LoginAuthenticationFilter.class)
         .authorizeHttpRequests(registry ->
             registry.requestMatchers("/api/hello").permitAll()
@@ -60,10 +62,11 @@ public class GaezzangeSecurityConfig {
                 .anyRequest().authenticated()
         ).oauth2Login(oauth2Login ->
             oauth2Login
-                .userInfoEndpoint((userInfoEndpointConfig) -> userInfoEndpointConfig
-                    .userService(customOAuth2UserService))
+                .userInfoEndpoint((userInfoEndpointConfig) ->
+                    userInfoEndpointConfig.userService(oAuth2UserAuthProvider)
+                )
                 .successHandler(authenticationSuccessHandler)
-                .failureHandler(new CustomAuthenticationFailureHandler())
+                .failureHandler(authenticationFailureHandler)
 
         )
         .logout(logout ->
