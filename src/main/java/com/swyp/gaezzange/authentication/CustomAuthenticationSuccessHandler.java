@@ -39,8 +39,6 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        String redirectUri = request.getParameter("redirect_uri");
-
         CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal();
         String accessToken = createJwtToken("access" ,authentication, customUserDetails);
         String refreshToken = createJwtToken("refresh" ,authentication, customUserDetails);
@@ -51,25 +49,19 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         HttpSession session = request.getSession();
         session.setAttribute("accessToken", accessToken);
 
+        AuthToken authToken = AuthToken.builder()
+                .expiresAt(new Date(System.currentTimeMillis() + refreshTokenExpirationTime))
+                .token(refreshToken)
+                .build();
 
-//        Optional<AuthToken> authTokenOptional = authTokenRepository.findAuthTokenByEmail(authentication.getName());
+        AuthToken saveAuthToken = authTokenRepository.save(authToken);
 
-//        if (authTokenOptional.isEmpty()) {
-            AuthToken authToken = AuthToken.builder()
-                    .expiresAt(new Date(System.currentTimeMillis() + refreshTokenExpirationTime))
-                    .token(refreshToken)
-                    .build();
-
-            AuthToken saveAuthToken = authTokenRepository.save(authToken);
-
-            response.setStatus(HttpStatus.OK.value());
-            response.sendRedirect("http://localdev.com:3000/token?tokenKey=" + saveAuthToken.getTokenId());
-//        }
-
-//        if (redirectUri != null) {
-//            response.sendRedirect(redirectUri);
-//        }
-
+        String referer = request.getHeader("Referer");
+        if(!referer.endsWith("/")) {
+            referer = referer + "/";
+        }
+        response.setStatus(HttpStatus.OK.value());
+        response.sendRedirect(referer + "token?tokenKey=" + saveAuthToken.getTokenId());
         log.info("Login success: {}", customUserDetails.getUserAuthId());
     }
 
