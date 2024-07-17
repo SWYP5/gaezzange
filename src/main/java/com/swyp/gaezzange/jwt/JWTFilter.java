@@ -2,6 +2,7 @@ package com.swyp.gaezzange.jwt;
 
 import com.swyp.gaezzange.domain.user.auth.repository.AuthToken;
 import com.swyp.gaezzange.domain.user.auth.repository.AuthTokenRepository;
+import com.swyp.gaezzange.util.TokenUserContext;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import jakarta.servlet.FilterChain;
@@ -13,11 +14,13 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+@Slf4j
 @RequiredArgsConstructor
 public class JWTFilter extends OncePerRequestFilter {
 
@@ -65,14 +68,19 @@ public class JWTFilter extends OncePerRequestFilter {
 
   private void setSecurityContextByToken(String token) {
     Jws<Claims> claimsJws = jwtUtil.parseClaims(token);
-    String userId = claimsJws.getBody().get("userId", String.class);
-    Long userAuthId = claimsJws.getBody().get("userAuthId", Long.class);
-    String email = claimsJws.getBody().get("email", String.class);
-    String role = claimsJws.getBody().get("role", String.class);
-    String provider = claimsJws.getBody().get("provider", String.class);
+
+    TokenUserContext context = TokenUserContext.builder()
+        .userId(claimsJws.getBody().get("userId", Long.class))
+        .userAuthId(claimsJws.getBody().get("userAuthId", Long.class))
+        .email(claimsJws.getBody().get("email", String.class))
+        .role(claimsJws.getBody().get("role", String.class))
+        .provider(claimsJws.getBody().get("provider", String.class))
+        .build();
+
+    log.debug("user context: {}", context);
 
     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-        email, userAuthId, jwtUtil.getAuthorities(role));
+        context.getEmail(), context, jwtUtil.getAuthorities(context.getRole()));
 
     SecurityContextHolder.getContext().setAuthentication(authentication);
   }
