@@ -1,7 +1,7 @@
 package com.swyp.gaezzange.authentication;
 
 import com.swyp.gaezzange.domain.user.auth.repository.UserAuth;
-import com.swyp.gaezzange.domain.user.auth.repository.UserAuthRepository;
+import com.swyp.gaezzange.domain.user.auth.service.UserAuthService;
 import com.swyp.gaezzange.domain.user.role.UserRole;
 import com.swyp.gaezzange.util.OAuth2Response;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
-  private final UserAuthRepository userAuthRepository;
+  private final UserAuthService userAuthService;
 
   @Override
   public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -30,16 +30,21 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     String providerCode = oAuth2Response.getProviderId();
-    UserAuth userAuth = userAuthRepository.findByProviderCode(providerCode)
+    UserAuth userAuth = userAuthService.getByProviderCode(providerCode)
         .orElseGet(() -> createUserAuth(oAuth2Response));
 
     return new CustomOAuth2User(userAuth);
   }
 
   private UserAuth createUserAuth(OAuth2Response response) {
-    UserAuth createdUserAuth = UserAuth.createUserAuth(response.getEmail(), response.getProvider(),
-        UserRole.USER, response.getProviderId());
-    return userAuthRepository.save(createdUserAuth);
+    UserAuth createdUserAuth = UserAuth.createUserAuth(
+        response.getEmail(),
+        response.getProvider(),
+        UserRole.USER,
+        response.getProviderId()
+    );
+
+    return userAuthService.saveUserAuth(createdUserAuth);
   }
 
 
