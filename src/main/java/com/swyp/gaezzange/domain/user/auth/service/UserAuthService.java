@@ -2,6 +2,7 @@ package com.swyp.gaezzange.domain.user.auth.service;
 
 import com.swyp.gaezzange.domain.user.auth.repository.UserAuth;
 import com.swyp.gaezzange.domain.user.auth.repository.UserAuthRepository;
+import com.swyp.gaezzange.domain.user.repository.User;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,12 @@ public class UserAuthService {
 
   @Transactional
   public UserAuth saveUserAuth(UserAuth userAuth) {
+    return userAuthRepository.save(userAuth);
+  }
+
+  @Transactional
+  public UserAuth updateUser(UserAuth userAuth, User user) {
+    userAuth.setUser(user);
     return userAuthRepository.save(userAuth);
   }
 }
