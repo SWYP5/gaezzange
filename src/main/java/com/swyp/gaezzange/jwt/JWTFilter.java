@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
@@ -27,51 +28,39 @@ public class JWTFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String requestUri = request.getRequestURI();
-        if (requestUri.matches("^\\/login(?:\\/.*)?$")) {
+      String requestUri = request.getRequestURI();
+      if (requestUri.matches("^\\/login(?:\\/.*)?$") || requestUri.matches("^\\/oauth2(?:\\/.*)?$")) {
+        filterChain.doFilter(request, response);
+        return;
+      }
 
-            filterChain.doFilter(request, response);
-            return;
-        }
-        if (requestUri.matches("^\\/oauth2(?:\\/.*)?$")) {
+      if (requestUri.matches("^\\/api/v1/auth/token(?:\\/.*)?$")) {
+        setTokenAfterLogin(request, response);
+        filterChain.doFilter(request, response);
+        return;
+      }
 
-            filterChain.doFilter(request, response);
-            return;
+      String accessToken = request.getHeader("Authorization");
+      if (accessToken != null && accessToken.startsWith("Bearer ")) {
+        accessToken = accessToken.substring(7);
+        try {
+          if (!jwtUtil.isExpired(accessToken)) {
+            setSecurityContextByToken(accessToken);
+          }
+        } catch (JwtException e) {
+          e.printStackTrace();
+          response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid Token");
+          return;
         }
-        if (requestUri.matches("^\\/api/token(?:\\/.*)?$")) {
-            String tokenKey = request.getParameter("tokenKey");
-            Optional<AuthToken> optionalAuthToken = authTokenRepository.findById(tokenKey);
-            optionalAuthToken.filter(token -> token.getExpiresAt().after(new Date()))
-                .ifPresentOrElse(
-                    token -> response.setHeader("Authorization", "Bearer " + token.getToken()),
-                    ()-> { throw new RuntimeException("만료"); }
-                );
-
-            filterChain.doFilter(request, response);
-            return;
+      } else {
+        Cookie[] cookies = request.getCookies();
+        for (Cookie cookie : cookies) {
+          if (cookie.getName().equals("refreshToken")) {
+            accessToken = cookie.getValue();
+            setSecurityContextByToken(accessToken);
+          }
         }
-
-        String accessToken = request.getHeader("Authorization");
-        if (accessToken != null && accessToken.startsWith("Bearer ")) {
-            accessToken = accessToken.substring(7);
-            try {
-                if (!jwtUtil.isExpired(accessToken)) {
-                    setSecurityContextByToken(accessToken);
-                }
-            } catch (JwtException e) {
-                e.printStackTrace();
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid Token");
-                return;
-            }
-        } else {
-            Cookie[] cookies = request.getCookies();
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("refreshToken")) {
-                    accessToken = cookie.getValue();
-                    setSecurityContextByToken(accessToken);
-                }
-            }
-        }
+      }
 
 
         filterChain.doFilter(request, response);
