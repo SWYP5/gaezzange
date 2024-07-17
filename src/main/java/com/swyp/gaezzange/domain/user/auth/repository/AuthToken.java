@@ -23,7 +23,8 @@ import lombok.NoArgsConstructor;
     name = "auth_tokens",
     indexes = {
         @Index(name = "auth_tokens_idx_01", columnList = "createdAt"),
-        @Index(name = "auth_tokens_idx_02", columnList = "updatedAt")
+        @Index(name = "auth_tokens_idx_02", columnList = "updatedAt"),
+        @Index(name = "auth_tokens_idx_03", columnList = "userAuthId"),
     }
 )
 public class AuthToken extends BaseTimeEntity {
@@ -31,6 +32,9 @@ public class AuthToken extends BaseTimeEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   private String tokenId;
+
+  @Column(nullable = false)
+  private Long userAuthId;
 
   @Column(nullable = false)
   private String token;

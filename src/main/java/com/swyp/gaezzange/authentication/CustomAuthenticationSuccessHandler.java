@@ -50,18 +50,19 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         session.setAttribute("accessToken", accessToken);
 
         AuthToken authToken = AuthToken.builder()
+                .userAuthId(customUserDetails.getUserAuthId())
                 .expiresAt(LocalDateTime.now().plusSeconds(10))
                 .token(refreshToken)
                 .build();
 
-        AuthToken saveAuthToken = authTokenRepository.save(authToken);
+        AuthToken savedAuthToken = authTokenRepository.save(authToken);
 
         String referer = request.getHeader("Referer");
         if(!referer.endsWith("/")) {
             referer = referer + "/";
         }
         response.setStatus(HttpStatus.OK.value());
-        response.sendRedirect(referer + "token?tokenKey=" + saveAuthToken.getTokenId());
+        response.sendRedirect(referer + "token?tokenKey=" + savedAuthToken.getTokenId());
         log.info("Login success: {}", customUserDetails.getUserAuthId());
     }
 

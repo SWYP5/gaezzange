@@ -2,6 +2,8 @@ package com.swyp.gaezzange.jwt;
 
 import com.swyp.gaezzange.domain.user.auth.repository.AuthToken;
 import com.swyp.gaezzange.domain.user.auth.repository.AuthTokenRepository;
+import com.swyp.gaezzange.domain.user.auth.repository.UserAuth;
+import com.swyp.gaezzange.domain.user.auth.service.UserAuthService;
 import com.swyp.gaezzange.util.TokenUserContext;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -26,6 +28,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
   private final JWTUtil jwtUtil;
   private final AuthTokenRepository authTokenRepository;
+  private final UserAuthService userAuthService;
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -46,6 +49,10 @@ public class JWTFilter extends OncePerRequestFilter {
     if (accessToken != null && accessToken.startsWith("Bearer ")) {
       accessToken = accessToken.substring(7);
       try {
+        if (jwtUtil.isNotOnboarded(accessToken)) {
+          UserAuth userAuth = userAuthService.getById(jwtUtil.getUserAuthId(accessToken)).get();
+          setSecurityContextByToken( jwtUtil.createJwt("access", userAuth));
+        }
         if (!jwtUtil.isExpired(accessToken)) {
           setSecurityContextByToken(accessToken);
         }
@@ -55,6 +62,10 @@ public class JWTFilter extends OncePerRequestFilter {
       }
     } else {
       Cookie[] cookies = request.getCookies();
+      //TODO 쿠키에서 리프레시 토큰 찾는 로직 지우기
+      // 헤더로 리프레스 주고 매번 같이 받기
+      // 만료되었으면 refresh 새로 갱신하기
+      // 프론트에서는 매요청 마다 refresh 토큰 갱신하기
       for (Cookie cookie : cookies) {
         if (cookie.getName().equals("refreshToken")) {
           accessToken = cookie.getValue();
