@@ -5,9 +5,8 @@ import com.swyp.gaezzange.domain.user.auth.service.UserAuthService;
 import com.swyp.gaezzange.domain.user.repository.User;
 import com.swyp.gaezzange.exception.customException.BizException;
 import com.swyp.gaezzange.util.TokenUserContext;
-import java.util.Objects;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +17,8 @@ public class UserContextProvider {
   private final UserAuthService userAuthService;
 
   public TokenUserContext getContext() {
-    return (TokenUserContext) SecurityContextHolder.getContext().getAuthentication().getDetails();
+    SecurityContext securityContext = SecurityContextHolder.getContext();
+    return (TokenUserContext) securityContext.getAuthentication().getCredentials();
   }
 
   public UserAuth getUserAuth() {

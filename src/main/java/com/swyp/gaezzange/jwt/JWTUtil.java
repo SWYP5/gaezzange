@@ -83,7 +83,7 @@ public class JWTUtil {
     return Jwts.builder()
         .claim("category", category)
         .claim("userAuthId", userAuth.getUserAuthId())
-        .claim("userId", Optional.ofNullable(userAuth).map(UserAuth::getUser).map(User::getUserId).orElseGet(null))
+        .claim("userId", Optional.ofNullable(userAuth).map(UserAuth::getUser).map(User::getUserId).orElse(null))
         .claim("email", userAuth.getEmail())
         .claim("role", userAuth.getRole())
         .claim("provider", userAuth.getProvider())

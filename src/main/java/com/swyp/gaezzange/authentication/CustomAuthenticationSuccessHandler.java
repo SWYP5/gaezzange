@@ -33,6 +33,9 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
     @Value("${jwt.refreshTokenExpirationTime}")
     private Long refreshTokenExpirationTime;
 
+    @Value("${accessTokenProvideExpirationTime}")
+    private Long accessTokenProvideExpirationTime;
+
     private final AuthTokenRepository authTokenRepository;
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
@@ -52,7 +55,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 
         AuthToken authToken = AuthToken.builder()
                 .userAuthId(customUserDetails.getUserAuthId())
-                .expiresAt(LocalDateTime.now().plusSeconds(10))
+                .expiresAt(LocalDateTime.now().plusSeconds(accessTokenProvideExpirationTime))
                 .token(refreshToken)
                 .build();
 
@@ -63,6 +66,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         if(!referer.endsWith("/")) {
             referer = referer + "/";
         }
+        log.info("referer: {}", referer);
         response.setStatus(HttpStatus.OK.value());
         response.sendRedirect(referer + "token?tokenKey=" + savedAuthToken.getTokenId());
         log.info("Login success: {}", customUserDetails.getUserAuthId());

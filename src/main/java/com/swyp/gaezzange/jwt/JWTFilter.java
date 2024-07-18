@@ -50,10 +50,9 @@ public class JWTFilter extends OncePerRequestFilter {
       accessToken = accessToken.substring(7);
       try {
         if (jwtUtil.isNotOnboarded(accessToken)) {
-          UserAuth userAuth = userAuthService.getById(jwtUtil.getUserAuthId(accessToken)).get();
-          setSecurityContextByToken(jwtUtil.createJwt("access", userAuth));
-        }
-        if (!jwtUtil.isExpired(accessToken)) {
+          refreshAccessToken(accessToken, response);
+          setSecurityContextByToken(accessToken);
+        } else if (!jwtUtil.isExpired(accessToken)) {
           setSecurityContextByToken(accessToken);
         }
       } catch (JwtException e) {
@@ -66,7 +65,7 @@ public class JWTFilter extends OncePerRequestFilter {
       // 헤더로 리프레스 주고 매번 같이 받기
       // 만료되었으면 refresh 새로 갱신하기
       // 프론트에서는 매요청 마다 refresh 토큰 갱신하기
-      if(cookies == null) {
+      if (cookies == null) {
         filterChain.doFilter(request, response);
       }
       for (Cookie cookie : cookies) {
@@ -107,5 +106,12 @@ public class JWTFilter extends OncePerRequestFilter {
             token -> response.setHeader("Authorization", "Bearer " + token.getToken()),
             () -> response.setStatus(HttpServletResponse.SC_UNAUTHORIZED)
         );
+  }
+
+  private String refreshAccessToken(String accessToken, HttpServletResponse response) {
+    UserAuth userAuth = userAuthService.getById(jwtUtil.getUserAuthId(accessToken)).get();
+    String refreshedToken = jwtUtil.createJwt("access", userAuth);
+    response.setHeader("Authorization", "Bearer " + refreshedToken);
+    return refreshedToken;
   }
 }
