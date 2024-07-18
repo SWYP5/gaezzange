@@ -1,4 +1,4 @@
-package com.swyp.gaezzange.service.feed;
+package com.swyp.gaezzange.domain.feed.service;
 
 import com.swyp.gaezzange.api.feed.dto.feed.FeedDetailDto;
 import com.swyp.gaezzange.api.feed.dto.feed.FeedDto;
@@ -9,6 +9,7 @@ import com.swyp.gaezzange.domain.feed.like.feed.repository.FeedLikeRepository;
 import com.swyp.gaezzange.domain.feed.repository.Feed;
 import com.swyp.gaezzange.domain.feed.repository.FeedRepository;
 import com.swyp.gaezzange.domain.user.repository.UserRepository;
+import com.swyp.gaezzange.exception.customException.BizException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -60,22 +61,22 @@ public class FeedService {
     );
 
     return feeds.stream().map(feed -> new FeedDto(
-        feed.getUserId().toString(), // Assuming userId is of type Long
-        getNicknameByUserId(feed.getUserId()), // Implement this method to get nickname
+        feed.getUserId().toString(),
+        getNicknameByUserId(feed.getUserId()),
         feed.getTendency(),
         feed.getCategory(),
-        getProfileImagePathByUserId(feed.getUserId()), // Implement this method to get profile image path
+        getProfileImagePathByUserId(feed.getUserId()),
         feed.getContent(),
-        getFeedImagePathByFeedId(feed.getFeedId()) // Implement this method to get feed image path
+        getFeedImagePathByFeedId(feed.getFeedId())
     )).collect(Collectors.toList());
   }
 
   public void updateFeed(long userId, String feedId, FeedForm feedForm) {
     Feed feed = getOptionalFeed(feedId)
-        .orElseThrow(() -> new RuntimeException("Feed not found"));
+        .orElseThrow(() -> new BizException("NOT_FOUND", "피드가 없습니다."));
 
     if (!feed.validateUserId(userId)) {
-      throw new RuntimeException("User not authorized to update feed");
+      throw new BizException("PERMISSION_DENIED", "권한이 없습니다.");
     }
 
     feed.updateFeed(feedForm.getTendency(), feedForm.getCategory(), feedForm.getContent());
@@ -84,10 +85,10 @@ public class FeedService {
 
   public void deleteFeed(long userId, String feedId) {
     Feed feed = getOptionalFeed(feedId)
-        .orElseThrow(() -> new RuntimeException("Feed not found"));
+        .orElseThrow(() -> new BizException("NOT_FOUND", "피드가 없습니다."));
 
     if (!feed.validateUserId(userId)) {
-      throw new RuntimeException("User not authorized to delete feed");
+      throw new BizException("PERMISSION_DENIED", "권한이 없습니다.");
     }
 
     feed.deleteFeed();
@@ -99,17 +100,14 @@ public class FeedService {
   }
 
   private String getNicknameByUserId(Long userId) {
-    // Implement this method to fetch the user's nickname based on userId
     return "nickname"; // Placeholder
   }
 
   private String getProfileImagePathByUserId(Long userId) {
-    // Implement this method to fetch the user's profile image path based on userId
     return "profileImagePath"; // Placeholder
   }
 
   private String getFeedImagePathByFeedId(Long feedId) {
-    // Implement this method to fetch the feed image path based on feedId
     return "feedImagePath"; // Placeholder
   }
 }

@@ -2,8 +2,8 @@ package com.swyp.gaezzange.api.feed;
 
 import com.swyp.gaezzange.api.feed.dto.comment.CommentForm;
 import com.swyp.gaezzange.domain.user.auth.repository.UserAuth;
-import com.swyp.gaezzange.service.feed.CommentLikeService;
-import com.swyp.gaezzange.service.feed.CommentService;
+import com.swyp.gaezzange.domain.feed.like.comment.service.CommentLikeService;
+import com.swyp.gaezzange.domain.feed.comment.service.CommentService;
 import com.swyp.gaezzange.util.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

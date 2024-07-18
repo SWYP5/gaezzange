@@ -1,14 +1,15 @@
-package com.swyp.gaezzange.service.feed;
+package com.swyp.gaezzange.domain.feed.like.comment.service;
 
 import com.swyp.gaezzange.domain.feed.like.comment.repository.CommentLike;
 import com.swyp.gaezzange.domain.feed.like.comment.repository.CommentLikeRepository;
+import com.swyp.gaezzange.domain.feed.like.service.AbstractLikeService;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class CommentLikeService extends AbstractLikeService<CommentLike>{
+public class CommentLikeService extends AbstractLikeService<CommentLike> {
 
   private final CommentLikeRepository commentLikeRepository;
 

@@ -1,8 +1,9 @@
-package com.swyp.gaezzange.service.feed;
+package com.swyp.gaezzange.domain.feed.comment.service;
 
 import com.swyp.gaezzange.api.feed.dto.comment.CommentForm;
 import com.swyp.gaezzange.domain.feed.comment.repository.Comment;
 import com.swyp.gaezzange.domain.feed.comment.repository.CommentRepository;
+import com.swyp.gaezzange.exception.customException.BizException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,10 +28,10 @@ public class CommentService {
 
   public void updateComment(long userId, String commentId, CommentForm commentForm) {
     Comment comment = getOptionalComment(commentId)
-        .orElseThrow(() -> new RuntimeException("Comment not found"));
+        .orElseThrow(() -> new BizException("NOT_FOUND", "코멘트가 없습니다."));
 
     if (!comment.validateUserId(userId)) {
-      throw new RuntimeException("User not authorized to update comment");
+      throw new BizException("PERMISSION_DENIED", "권한이 없습니다.");
     }
 
     comment.updateContent(commentForm.getCommentContent());
@@ -39,10 +40,10 @@ public class CommentService {
 
   public void deleteComment(long userId, String commentId) {
     Comment comment = getOptionalComment(commentId)
-        .orElseThrow(() -> new RuntimeException("Comment not found"));
+        .orElseThrow(() -> new BizException("NOT_FOUND", "코멘트가 없습니다."));
 
     if (!comment.validateUserId(userId)) {
-      throw new RuntimeException("User not authorized to delete comment");
+      throw new BizException("PERMISSION_DENIED", "권한이 없습니다.");
     }
 
     comment.deleteComment();

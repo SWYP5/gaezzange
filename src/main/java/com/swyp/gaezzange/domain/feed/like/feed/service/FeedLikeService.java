@@ -1,7 +1,8 @@
-package com.swyp.gaezzange.service.feed;
+package com.swyp.gaezzange.domain.feed.like.feed.service;
 
 import com.swyp.gaezzange.domain.feed.like.feed.repository.FeedLike;
 import com.swyp.gaezzange.domain.feed.like.feed.repository.FeedLikeRepository;
+import com.swyp.gaezzange.domain.feed.like.service.AbstractLikeService;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

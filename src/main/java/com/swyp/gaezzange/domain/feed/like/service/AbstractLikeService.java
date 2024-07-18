@@ -1,4 +1,4 @@
-package com.swyp.gaezzange.service.feed;
+package com.swyp.gaezzange.domain.feed.like.service;
 
 import java.util.Optional;
 
