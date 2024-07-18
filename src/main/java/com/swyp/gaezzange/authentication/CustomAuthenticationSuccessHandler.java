@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +58,8 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 
         AuthToken savedAuthToken = authTokenRepository.save(authToken);
 
-        String referer = request.getHeader("Referer");
+        String referer = Optional.ofNullable(request.getHeader("Referer"))
+            .orElse("http://localhost:3000");
         if(!referer.endsWith("/")) {
             referer = referer + "/";
         }
