@@ -5,6 +5,7 @@ import com.swyp.gaezzange.api.feed.dto.feed.FeedDto;
 import com.swyp.gaezzange.api.feed.dto.feed.FeedForm;
 import com.swyp.gaezzange.api.feed.dto.feed.FeedSearchDto;
 import com.swyp.gaezzange.authentication.CustomOAuth2User;
+import com.swyp.gaezzange.authentication.UserContextProvider;
 import com.swyp.gaezzange.domain.user.auth.repository.UserAuth;
 import com.swyp.gaezzange.domain.feed.like.feed.service.FeedLikeService;
 import com.swyp.gaezzange.domain.feed.service.FeedService;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class FeedController {
 
+    private final UserContextProvider userContextProvider;
     private final FeedService feedService;
     private final FeedLikeService feedLikeService;
 
@@ -43,30 +45,26 @@ public class FeedController {
     }
 
     @PostMapping()
-    public ApiResponse<FeedDetailDto> registerFeed(@AuthenticationPrincipal CustomOAuth2User userAuth, @RequestBody FeedForm feedForm) {
-        long testId = (long) SecurityContextHolder.getContext().getAuthentication().getCredentials();
-        feedService.registerFeed(testId, feedForm);;
+    public ApiResponse<FeedDetailDto> registerFeed(@RequestBody FeedForm feedForm) {
+        feedService.registerFeed(userContextProvider.getUserId(), feedForm);;
         return ApiResponse.success(null);
     }
 
     @PutMapping("/{feedId}")
-    public ApiResponse<FeedDetailDto> updateFeed(@AuthenticationPrincipal UserAuth userAuth, @PathVariable String feedId, @RequestBody FeedForm feedForm) {
-        long testId = (long) SecurityContextHolder.getContext().getAuthentication().getCredentials();
-        feedService.updateFeed(testId, feedId, feedForm);
+    public ApiResponse<FeedDetailDto> updateFeed(@PathVariable Long feedId, @RequestBody FeedForm feedForm) {
+        feedService.updateFeed(userContextProvider.getUserId(), feedId, feedForm);
         return ApiResponse.success(null);
     }
 
     @DeleteMapping("/{feedId}")
-    public ApiResponse<FeedDetailDto> deleteFeed(@AuthenticationPrincipal UserAuth userAuth, @PathVariable String feedId) {
-        long testId = (long) SecurityContextHolder.getContext().getAuthentication().getCredentials();
-        feedService.deleteFeed(testId, feedId);
+    public ApiResponse<FeedDetailDto> deleteFeed(@PathVariable Long feedId) {
+        feedService.deleteFeed(userContextProvider.getUserId(), feedId);
         return ApiResponse.success(null);
     }
 
     @PostMapping("/{feedId}/like-toggle")
-    public ApiResponse<String> likeFeed(@PathVariable Long feedId, @AuthenticationPrincipal UserAuth userAuth) {
-        long testId = (long) SecurityContextHolder.getContext().getAuthentication().getCredentials();
-        feedLikeService.toggleLike(testId, String.valueOf(feedId));
+    public ApiResponse<String> likeFeed(@PathVariable Long feedId) {
+        feedLikeService.toggleLike(userContextProvider.getUserId(), feedId);
         return ApiResponse.success(null);
     }
 }

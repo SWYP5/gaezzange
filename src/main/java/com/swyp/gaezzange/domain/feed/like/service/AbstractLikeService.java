@@ -9,12 +9,11 @@ public abstract class AbstractLikeService<T> {
   protected abstract void saveLike(T like);
   protected abstract void toggleLikeStatus(T like);
 
-  public void toggleLike(Long userId, String entityId) {
-    Long id = Long.valueOf(entityId);
-    Optional<T> optionalLike = findLike(id, userId);
+  public void toggleLike(Long userId, Long entityId) {
+    Optional<T> optionalLike = findLike(entityId, userId);
 
     if (optionalLike.isEmpty()) {
-      T like = createLike(id, userId);
+      T like = createLike(entityId, userId);
       saveLike(like);
     } else {
       T like = optionalLike.get();

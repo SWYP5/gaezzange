@@ -71,7 +71,7 @@ public class FeedService {
     )).collect(Collectors.toList());
   }
 
-  public void updateFeed(long userId, String feedId, FeedForm feedForm) {
+  public void updateFeed(long userId, long feedId, FeedForm feedForm) {
     Feed feed = getOptionalFeed(feedId)
         .orElseThrow(() -> new BizException("NOT_FOUND", "피드가 없습니다."));
 
@@ -83,7 +83,7 @@ public class FeedService {
     feedRepository.save(feed);
   }
 
-  public void deleteFeed(long userId, String feedId) {
+  public void deleteFeed(long userId, long feedId) {
     Feed feed = getOptionalFeed(feedId)
         .orElseThrow(() -> new BizException("NOT_FOUND", "피드가 없습니다."));
 
@@ -95,8 +95,8 @@ public class FeedService {
     feedRepository.save(feed);
   }
 
-  private Optional<Feed> getOptionalFeed(String feedId) {
-    return feedRepository.findById(Long.valueOf(feedId));
+  private Optional<Feed> getOptionalFeed(long feedId) {
+    return feedRepository.findById(feedId);
   }
 
   private String getNicknameByUserId(Long userId) {

@@ -14,19 +14,19 @@ public class CommentService {
 
   private final CommentRepository commentRepository;
 
-  public void registerComment(long userId, String feedId, CommentForm commentForm) {
-    Comment parentComment = getOptionalComment(commentForm.getCommentParentId())
+  public void registerComment(long userId, Long feedId, CommentForm commentForm) {
+    Comment parentComment = getOptionalComment(Long.valueOf(commentForm.getCommentParentId()))
         .orElse(null);
     Comment comment = Comment.builder()
         .userId(userId)
         .parentComment(parentComment)
-        .feedId(Long.valueOf(feedId))
+        .feedId(feedId)
         .content(commentForm.getCommentContent())
         .build();
     commentRepository.save(comment);
   }
 
-  public void updateComment(long userId, String commentId, CommentForm commentForm) {
+  public void updateComment(long userId, Long commentId, CommentForm commentForm) {
     Comment comment = getOptionalComment(commentId)
         .orElseThrow(() -> new BizException("NOT_FOUND", "코멘트가 없습니다."));
 
@@ -38,7 +38,7 @@ public class CommentService {
     commentRepository.save(comment);
   }
 
-  public void deleteComment(long userId, String commentId) {
+  public void deleteComment(long userId, Long commentId) {
     Comment comment = getOptionalComment(commentId)
         .orElseThrow(() -> new BizException("NOT_FOUND", "코멘트가 없습니다."));
 
@@ -50,11 +50,11 @@ public class CommentService {
     commentRepository.save(comment);
   }
 
-  private Optional<Comment> getOptionalComment(String commentId) {
+  private Optional<Comment> getOptionalComment(Long commentId) {
     if (commentId == null) {
       return Optional.empty();
     } else {
-      return commentRepository.findById(Long.valueOf(commentId));
+      return commentRepository.findById(commentId);
     }
   }
 }
