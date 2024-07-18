@@ -22,7 +22,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "FeedController", description = "Feed API")
 @RestController
@@ -45,14 +47,23 @@ public class FeedController {
     }
 
     @PostMapping()
-    public ApiResponse<FeedDetailDto> registerFeed(@RequestBody FeedForm feedForm) {
-        feedService.registerFeed(userContextProvider.getUserId(), feedForm);;
+    public ApiResponse<FeedDetailDto> registerFeed(
+        @RequestPart("feedForm") FeedForm feedForm,
+        @RequestPart(value = "feedImage", required = false) MultipartFile feedImageFile
+    )
+    {
+        feedService.registerFeed(userContextProvider.getUserId(), feedForm, feedImageFile);;
         return ApiResponse.success(null);
     }
 
     @PutMapping("/{feedId}")
-    public ApiResponse<FeedDetailDto> updateFeed(@PathVariable Long feedId, @RequestBody FeedForm feedForm) {
-        feedService.updateFeed(userContextProvider.getUserId(), feedId, feedForm);
+    public ApiResponse<FeedDetailDto> updateFeed(
+        @PathVariable Long feedId,
+        @RequestPart("feedForm") FeedForm feedForm,
+        @RequestPart(value = "feedImage", required = false) MultipartFile feedImageFile
+    )
+    {
+        feedService.updateFeed(userContextProvider.getUserId(), feedId, feedForm, feedImageFile);
         return ApiResponse.success(null);
     }
 

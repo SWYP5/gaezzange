@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @Builder
@@ -15,5 +16,5 @@ public class FeedForm {
     private UserTendency tendency;
     private FeedCategory category;
     private String content;
-    private String feedImage;
+//    private MultipartFile feedImage;
 }

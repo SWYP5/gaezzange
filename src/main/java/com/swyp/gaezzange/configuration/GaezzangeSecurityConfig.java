@@ -54,8 +54,10 @@ public class GaezzangeSecurityConfig {
     http
         .csrf(AbstractHttpConfigurer::disable)
         .cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource()))
-        .exceptionHandling(httpSecurityExceptionHandlingConfigurer -> {})
-        .addFilterBefore(new JWTFilter(jwtUtil, authTokenRepository, userAuthService), OAuth2LoginAuthenticationFilter.class)
+        .exceptionHandling(httpSecurityExceptionHandlingConfigurer -> {
+        })
+        .addFilterBefore(new JWTFilter(jwtUtil, authTokenRepository, userAuthService),
+            OAuth2LoginAuthenticationFilter.class)
         .authorizeHttpRequests(registry ->
             registry.requestMatchers("/api/hello").permitAll()
                 .requestMatchers("/oauth2/**").permitAll()

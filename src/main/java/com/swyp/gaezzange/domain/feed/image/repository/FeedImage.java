@@ -29,4 +29,12 @@ public class FeedImage extends BaseTimeEntity {
 
     @Column(columnDefinition = "TINYINT(1)", nullable = false)
     private boolean deleted;
+
+    public void updateFeedImagePath(String feedImagePath) {
+        this.feedImagePath = feedImagePath;
+    }
+
+    public void deleteImage() {
+        this.deleted = true;
+    }
 }
