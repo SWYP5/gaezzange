@@ -112,6 +112,7 @@ public class JWTFilter extends OncePerRequestFilter {
     UserAuth userAuth = userAuthService.getById(jwtUtil.getUserAuthId(accessToken)).get();
     String refreshedToken = jwtUtil.createJwt("access", userAuth);
     response.setHeader("Authorization", "Bearer " + refreshedToken);
+    log.debug("[Token refreshed] accessToken: {}, refresh token: {}", accessToken, refreshedToken);
     return refreshedToken;
   }
 }

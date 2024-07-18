@@ -90,7 +90,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         Long userId = customUserDetails.getUserId();
         String role = roleNames.isEmpty() ? null : roleNames.get(0);
 
-        return jwtUtil.createJwt(category, userAuthId, userId, email, role, provider, refreshTokenExpirationTime);
+        return jwtUtil.createJwt(category, userAuthId, userId, email, role, provider);
     }
 
 

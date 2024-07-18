@@ -65,7 +65,7 @@ public class JWTUtil {
   }
 
   public String createJwt(String category, Long userAuthId, Long userId, String email, String role,
-      String provider, long expiredMs) {
+      String provider) {
     return Jwts.builder()
         .claim("category", category)
         .claim("userAuthId", userAuthId)
@@ -74,7 +74,7 @@ public class JWTUtil {
         .claim("role", role)
         .claim("provider", provider)
         .setIssuedAt(new Date())
-        .setExpiration(new Date(System.currentTimeMillis() + expiredMs))
+        .setExpiration(new Date(System.currentTimeMillis() + refreshTokenExpirationTime))
         .signWith(secretKey)
         .compact();
   }
@@ -88,7 +88,7 @@ public class JWTUtil {
         .claim("role", userAuth.getRole())
         .claim("provider", userAuth.getProvider())
         .setIssuedAt(new Date())
-        .setExpiration(new Date(System.currentTimeMillis() + refreshTokenExpirationTime / 1000))
+        .setExpiration(new Date(System.currentTimeMillis() + refreshTokenExpirationTime))
         .signWith(secretKey)
         .compact();
   }
