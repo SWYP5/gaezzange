@@ -51,7 +51,7 @@ public class JWTFilter extends OncePerRequestFilter {
       try {
         if (jwtUtil.isNotOnboarded(accessToken)) {
           UserAuth userAuth = userAuthService.getById(jwtUtil.getUserAuthId(accessToken)).get();
-          setSecurityContextByToken( jwtUtil.createJwt("access", userAuth));
+          setSecurityContextByToken(jwtUtil.createJwt("access", userAuth));
         }
         if (!jwtUtil.isExpired(accessToken)) {
           setSecurityContextByToken(accessToken);
@@ -66,6 +66,9 @@ public class JWTFilter extends OncePerRequestFilter {
       // 헤더로 리프레스 주고 매번 같이 받기
       // 만료되었으면 refresh 새로 갱신하기
       // 프론트에서는 매요청 마다 refresh 토큰 갱신하기
+      if(cookies == null) {
+        filterChain.doFilter(request, response);
+      }
       for (Cookie cookie : cookies) {
         if (cookie.getName().equals("refreshToken")) {
           accessToken = cookie.getValue();

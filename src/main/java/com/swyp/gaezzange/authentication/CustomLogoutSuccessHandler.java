@@ -24,6 +24,7 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
         response.setStatus(HttpServletResponse.SC_OK);
         response.sendRedirect(redirectUrl);
     }
+
     private String extractRefreshToken(Cookie[] cookies) {
         if (cookies != null) {
             for (Cookie cookie : cookies) {
