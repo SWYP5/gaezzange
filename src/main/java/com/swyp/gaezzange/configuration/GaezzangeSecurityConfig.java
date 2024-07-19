@@ -92,6 +92,8 @@ public class GaezzangeSecurityConfig {
     return request -> {
       CorsConfiguration config = new CorsConfiguration();
       config.setAllowedHeaders(Collections.singletonList("*"));
+      config.addExposedHeader("Authorization");
+      config.addExposedHeader("RefreshToken");
       config.setAllowedMethods(Collections.singletonList("*"));
       config.setAllowedOriginPatterns(
           List.of("http://localhost:3000", "https://gaejjange.swygbro.com", "http://localdev.com:3000"));
