@@ -1,6 +1,7 @@
 package com.swyp.gaezzange.api.routine.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.swyp.gaezzange.domain.routine.repository.Routine;
 import com.swyp.gaezzange.domain.tendency.UserTendency;
 import jakarta.annotation.Nullable;
 import java.time.DayOfWeek;
@@ -25,4 +26,18 @@ public class RoutineDto {
   @Nullable
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss", timezone = "Asia/Seoul")
   LocalTime executionTime;
+
+  public static RoutineDto from(Routine routine) {
+    return RoutineDto.builder()
+        .routineId(routine.getRoutineId())
+        .userId(routine.getUserId())
+        .tendency(routine.getTendency())
+        .name(routine.getName())
+        .emoji(routine.getEmoji())
+        .daysOfWeek(routine.getDaysOfWeek())
+        .startedDate(routine.getStartedDate())
+        .endedDate(routine.getStartedDate())
+        .executionTime(routine.getExecutionTime())
+        .build();
+  }
 }

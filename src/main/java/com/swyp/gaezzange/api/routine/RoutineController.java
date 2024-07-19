@@ -29,14 +29,16 @@ public class RoutineController {
 
   @GetMapping("/{targetDate}")
   public ApiResponse<List<RoutineDto>> getDailyRoutines(@PathVariable LocalDate targetDate) {
-    //TODO implement
-    return ApiResponse.success(null);
+    User user = contextProvider.getUser();
+    //TODO cursor 또는 paging 처리 필요?
+    List<RoutineDto> routines= routineApplication.listRoutinesOnTargetDate(user, targetDate);
+    return ApiResponse.success(routines);
   }
 
   @GetMapping("/{routineId}")
   public ApiResponse<RoutineDto> getRoutine(@PathVariable Long routineId) {
-    //TODO implement
-    return ApiResponse.success(null);
+    RoutineDto routine= routineApplication.getRoutine(routineId);
+    return ApiResponse.success(routine);
   }
 
   @PostMapping("")
