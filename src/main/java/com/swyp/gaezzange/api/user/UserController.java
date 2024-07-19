@@ -29,7 +29,7 @@ public class UserController {
   @GetMapping("/my-info")
   public ApiResponse<UserBasicInfoDto> getUser() {
     User user = Optional.ofNullable(userContextProvider.getUser())
-        .orElseThrow(() -> new BizException("NOT_FOUND", "유저 정보가 없습니다."));
+        .orElseThrow(() -> new BizException("USER_NOT_FOUND", "유저 정보가 없습니다."));
 
     return ApiResponse.success(UserBasicInfoDto.from(user));
   }

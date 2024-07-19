@@ -35,7 +35,7 @@ public class UserContextProvider {
   public long getUserId() {
     User user = userAuthService.getById(getContext().getUserAuthId())
         .map(UserAuth::getUser)
-        .orElseThrow(() -> new BizException("NOT_FOUND", "유저 정보가 없습니다."));
+        .orElseThrow(() -> new BizException("USER_NOT_FOUND", "유저 정보가 없습니다."));
     return user.getUserId();
   }
 }
