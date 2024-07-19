@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class RoutineService {
+
   private final RoutineRepository repository;
 
   @Transactional
@@ -20,14 +21,14 @@ public class RoutineService {
     return repository.save(routine);
   }
 
-  public List<Routine> listRoutinesOnTargetDate(Long userId, LocalDate targetDate) {
-    return repository.findAllByUserIdAndTargetDateBetweenStartedDateAndEndedDate(userId, targetDate);
+  public List<Routine> listRoutinesOnTargetDate(Long userId, LocalDate startDate, LocalDate endDate) {
+    return repository.findAllByUserIdAndStartedDateLessThanEqualAndEndedDateGreaterThanEqualAndDeletedIsFalse(
+        userId, startDate, endDate
+    );
   }
 
   public Routine findRoutineById(Long id) {
     return repository.findById(id)
         .orElseThrow(() -> new BizException("NOT_FOUND_ROUTINE", "루틴을 찾을 수 없습니다."));
-    );
   }
-
 }

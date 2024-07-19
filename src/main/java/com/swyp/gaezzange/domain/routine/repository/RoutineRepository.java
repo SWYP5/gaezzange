@@ -7,5 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RoutineRepository extends JpaRepository<Routine, Long> {
-  List<Routine> findAllByUserIdAndTargetDateBetweenStartedDateAndEndedDate(Long userId, LocalDate targetDate);
+
+  List<Routine> findAllByUserIdAndStartedDateLessThanEqualAndEndedDateGreaterThanEqualAndDeletedIsFalse(
+      Long userId, LocalDate startDate, LocalDate endDate);
 }

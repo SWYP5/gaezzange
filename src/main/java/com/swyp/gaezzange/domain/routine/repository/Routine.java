@@ -1,5 +1,6 @@
 package com.swyp.gaezzange.domain.routine.repository;
 
+import com.swyp.gaezzange.api.routine.dto.RoutineForm;
 import com.swyp.gaezzange.domain.tendency.UserTendency;
 import com.swyp.gaezzange.util.jpa.BaseTimeEntity;
 import com.swyp.gaezzange.util.jpa.DaysOfWeekConverter;
@@ -21,6 +22,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Builder
 @Entity
@@ -66,4 +68,18 @@ public class Routine extends BaseTimeEntity {
   @Convert(converter = DaysOfWeekConverter.class)
   @Column(columnDefinition = "SET('MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY')")
   private Set<DayOfWeek> daysOfWeek;
+
+  @Setter
+  @Column(nullable = false)
+  private Boolean deleted;
+
+  public void update(RoutineForm form) {
+    tendency = form.getTendency();
+    name = form.getName();
+    emoji = form.getEmoji();
+    startedDate = form.getStartedDate();
+    endedDate = form.getEndedDate();
+    executionTime = form.getExecutionTime();
+    daysOfWeek = form.getDaysOfWeek();
+  }
 }

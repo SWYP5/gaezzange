@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -27,11 +28,11 @@ public class RoutineController {
   private final UserContextProvider contextProvider;
   private final RoutineApplication routineApplication;
 
-  @GetMapping("/{targetDate}")
-  public ApiResponse<List<RoutineDto>> getDailyRoutines(@PathVariable LocalDate targetDate) {
+  @GetMapping("")
+  public ApiResponse<List<RoutineDto>> getDailyRoutines(@RequestParam LocalDate startDate, @RequestParam LocalDate endDate) {
     User user = contextProvider.getUser();
     //TODO cursor 또는 paging 처리 필요?
-    List<RoutineDto> routines= routineApplication.listRoutinesOnTargetDate(user, targetDate);
+    List<RoutineDto> routines= routineApplication.listRoutines(user, startDate, endDate);
     return ApiResponse.success(routines);
   }
 
@@ -50,15 +51,15 @@ public class RoutineController {
 
   @PutMapping("/{routineId}")
   public ApiResponse updateRoutine(@Valid @RequestBody RoutineForm form, @PathVariable Long routineId) {
-    //TODO implement
-    //Add Validation : 본인의 루틴만 업데이트 가능
+    User user = contextProvider.getUser();
+    routineApplication.updateRoutine(user, routineId, form);
     return ApiResponse.success(null);
   }
 
   @DeleteMapping("/{routineId}")
   public ApiResponse removeRoutine(@PathVariable Long routineId) {
-    //TODO implement
-    //Add Validation : 본인의 루틴만 삭제 가능
+    User user = contextProvider.getUser();
+    routineApplication.deleteRoutine(user, routineId);
     return ApiResponse.success(null);
   }
 }
