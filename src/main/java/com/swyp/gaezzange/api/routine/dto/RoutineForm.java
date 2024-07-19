@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Set;
 import lombok.Getter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Getter
 public class RoutineForm {
@@ -31,6 +32,7 @@ public class RoutineForm {
   LocalDate endedDate;
 
   @Nullable
+  @DateTimeFormat(pattern = "HH:mm:ss")
   LocalTime executionTime;
 
   @NotEmpty

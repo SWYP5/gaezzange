@@ -1,5 +1,6 @@
 package com.swyp.gaezzange.api.routine.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.swyp.gaezzange.domain.tendency.UserTendency;
 import jakarta.annotation.Nullable;
 import java.time.DayOfWeek;
@@ -22,5 +23,6 @@ public class RoutineDto {
   @Nullable
   LocalDate endedDate;
   @Nullable
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss", timezone = "Asia/Seoul")
   LocalTime executionTime;
 }
