@@ -1,6 +1,7 @@
 package com.swyp.gaezzange.api.routine.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.swyp.gaezzange.domain.category.RoutineCategory;
 import com.swyp.gaezzange.domain.routine.repository.Routine;
 import com.swyp.gaezzange.domain.tendency.UserTendency;
 import jakarta.annotation.Nullable;
@@ -17,6 +18,7 @@ public class RoutineDto {
   Long routineId;
   Long userId;
   UserTendency tendency;
+  RoutineCategory category;
   String name;
   String emoji;
   Set<DayOfWeek> daysOfWeek;
@@ -32,6 +34,7 @@ public class RoutineDto {
         .routineId(routine.getRoutineId())
         .userId(routine.getUserId())
         .tendency(routine.getTendency())
+        .category(routine.getCategory())
         .name(routine.getName())
         .emoji(routine.getEmoji())
         .daysOfWeek(routine.getDaysOfWeek())

@@ -1,6 +1,7 @@
 package com.swyp.gaezzange.domain.routine.repository;
 
 import com.swyp.gaezzange.api.routine.dto.RoutineForm;
+import com.swyp.gaezzange.domain.category.RoutineCategory;
 import com.swyp.gaezzange.domain.tendency.UserTendency;
 import com.swyp.gaezzange.util.jpa.BaseTimeEntity;
 import com.swyp.gaezzange.util.jpa.DaysOfWeekConverter;
@@ -50,6 +51,10 @@ public class Routine extends BaseTimeEntity {
   @Column(nullable = false)
   private UserTendency tendency;
 
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private RoutineCategory category;
+
   @Column(nullable = false)
   private String name;
 
@@ -75,6 +80,7 @@ public class Routine extends BaseTimeEntity {
 
   public void update(RoutineForm form) {
     tendency = form.getTendency();
+    category = form.getCategory();
     name = form.getName();
     emoji = form.getEmoji();
     startedDate = form.getStartedDate();

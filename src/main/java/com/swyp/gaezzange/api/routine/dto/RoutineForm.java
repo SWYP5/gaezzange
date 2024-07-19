@@ -1,5 +1,6 @@
 package com.swyp.gaezzange.api.routine.dto;
 
+import com.swyp.gaezzange.domain.category.RoutineCategory;
 import com.swyp.gaezzange.domain.tendency.UserTendency;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;
@@ -18,6 +19,9 @@ public class RoutineForm {
 
   @NotNull
   UserTendency tendency;
+
+  @NotNull
+  RoutineCategory category;
 
   @NotBlank
   String name;

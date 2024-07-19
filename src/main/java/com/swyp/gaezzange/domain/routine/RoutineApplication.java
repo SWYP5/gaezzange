@@ -24,6 +24,7 @@ public class RoutineApplication {
     routineService.createRoutine(
         Routine.builder()
             .userId(user.getUserId())
+            .category(form.getCategory())
             .tendency(form.getTendency())
             .startedDate(form.getStartedDate())
             .endedDate(form.getEndedDate())
