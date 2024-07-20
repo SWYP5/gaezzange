@@ -20,12 +20,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
+@Transactional(readOnly = true)
 public class FeedService {
 
   private final FeedRepository feedRepository;
@@ -55,9 +58,11 @@ public class FeedService {
       feedImageRepository.save(feedImage);
     } catch (InvalidFileException e) {
       feedRepository.delete(savedFeed); // 이미지 업로드 실패 시 피드 삭제
-      throw new InvalidFileException("이미지 파일만 업로드할 수 있습니다.");
+      throw new BizException("NOT_VALID_IMAGE", "이미지 파일만 업로드할 수 있습니다.");
     } catch (Exception e) {
       feedRepository.delete(savedFeed); // 이미지 업로드 실패 시 피드 삭제
+      log.error("[FAILED_TO_REGISTER_FEED] userId: {}", userId, e);
+      throw new BizException("FAILED_TO_REGISTER_FEED", e.getMessage());
     }
   }
 
@@ -137,6 +142,7 @@ public class FeedService {
 
   }
 
+  @Transactional
   public void deleteFeed(long userId, long feedId) {
     Feed feed = getOptionalFeed(feedId)
         .orElseThrow(() -> new BizException("NOT_FOUND", "피드가 없습니다."));
@@ -159,6 +165,7 @@ public class FeedService {
       feedImage.deleteImage();
       feedImageRepository.save(feedImage);
     } catch (Exception e) {
+      log.error("FAILED_TO_DELETE_FEED: {}", feedImage.getFeedImagePath(), e);
       throw new BizException("DELETE_FAILED", "삭제에 실패했습니다.");
     }
 
