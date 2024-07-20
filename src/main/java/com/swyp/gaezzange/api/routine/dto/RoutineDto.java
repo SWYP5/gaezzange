@@ -14,18 +14,18 @@ import lombok.Getter;
 @Builder
 @Getter
 public class RoutineDto {
-  Long routineId;
-  Long userId;
-  UserTendency tendency;
-  RoutineCategory category;
-  String name;
-  String emoji;
-  Set<DayOfWeek> daysOfWeek;
-  LocalDate startedDate;
+  private Long routineId;
+  private Long userId;
+  private UserTendency tendency;
+  private RoutineCategory category;
+  private String name;
+  private Long emoji;
+  private Set<DayOfWeek> daysOfWeek;
+  private LocalDate startedDate;
   @Nullable
-  LocalDate endedDate;
+  private LocalDate endedDate;
   @Nullable
-  LocalTime executionTime;
+  private LocalTime executionTime;
 
   public static RoutineDto from(Routine routine) {
     return RoutineDto.builder()

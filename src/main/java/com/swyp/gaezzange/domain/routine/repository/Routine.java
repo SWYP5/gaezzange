@@ -59,7 +59,7 @@ public class Routine extends BaseTimeEntity {
   private String name;
 
   @Column
-  private String emoji;
+  private Long emoji;
 
   @Column(nullable = false)
   private LocalDate startedDate;

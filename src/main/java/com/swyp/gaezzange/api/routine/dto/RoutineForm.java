@@ -6,7 +6,6 @@ import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -17,26 +16,26 @@ import lombok.Getter;
 public class RoutineForm {
 
   @NotNull
-  UserTendency tendency;
+  private UserTendency tendency;
 
   @NotNull
-  RoutineCategory category;
+  private RoutineCategory category;
 
   @NotBlank
-  String name;
+  private String name;
 
-  @Size(max = 1)
-  String emoji;
+  @Nullable
+  private Long emoji;
 
   @NotNull
-  LocalDate startedDate;
+  private LocalDate startedDate;
 
   @Nullable
-  LocalDate endedDate;
+  private LocalDate endedDate;
 
   @Nullable
-  LocalTime executionTime;
+  private LocalTime executionTime;
 
   @NotEmpty
-  Set<DayOfWeek> daysOfWeek;
+  private Set<DayOfWeek> daysOfWeek;
 }
