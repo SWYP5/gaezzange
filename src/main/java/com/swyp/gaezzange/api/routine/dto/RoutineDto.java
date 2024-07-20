@@ -2,7 +2,7 @@ package com.swyp.gaezzange.api.routine.dto;
 
 import com.swyp.gaezzange.domain.category.RoutineCategory;
 import com.swyp.gaezzange.domain.routine.repository.Routine;
-import com.swyp.gaezzange.domain.tendency.UserTendency;
+import com.swyp.gaezzange.domain.tendency.Tendency;
 import jakarta.annotation.Nullable;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -16,7 +16,7 @@ import lombok.Getter;
 public class RoutineDto {
   private Long routineId;
   private Long userId;
-  private UserTendency tendency;
+  private Tendency tendency;
   private RoutineCategory category;
   private String name;
   private Long emoji;

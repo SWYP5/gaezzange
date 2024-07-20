@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
     indexes = {
         @Index(name = "routine_executions_idx_01", columnList = "createdAt"),
         @Index(name = "routine_executions_idx_02", columnList = "updatedAt"),
-        @Index(name = "routine_executions_idx_03", columnList = "routineId")
+        @Index(name = "routine_executions_idx_03", columnList = "routineId, executedDate")
     }
 )
 public class RoutineExecution extends BaseTimeEntity {

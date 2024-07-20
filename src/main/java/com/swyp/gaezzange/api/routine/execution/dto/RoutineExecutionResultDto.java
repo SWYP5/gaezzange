@@ -5,6 +5,6 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class RoutineExecutionDto {
+public class RoutineExecutionResultDto {
 
 }

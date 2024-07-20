@@ -1,7 +1,7 @@
 package com.swyp.gaezzange.api.routine.dto;
 
 import com.swyp.gaezzange.domain.category.RoutineCategory;
-import com.swyp.gaezzange.domain.tendency.UserTendency;
+import com.swyp.gaezzange.domain.tendency.Tendency;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -16,7 +16,7 @@ import lombok.Getter;
 public class RoutineForm {
 
   @NotNull
-  private UserTendency tendency;
+  private Tendency tendency;
 
   @NotNull
   private RoutineCategory category;

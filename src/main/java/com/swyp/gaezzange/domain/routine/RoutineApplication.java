@@ -2,16 +2,20 @@ package com.swyp.gaezzange.domain.routine;
 
 import com.swyp.gaezzange.api.routine.dto.RoutineDto;
 import com.swyp.gaezzange.api.routine.dto.RoutineForm;
+import com.swyp.gaezzange.api.routine.execution.dto.RoutineExecutionResultDto;
 import com.swyp.gaezzange.domain.routine.execution.repository.RoutineExecution;
 import com.swyp.gaezzange.domain.routine.execution.service.RoutineExecutionService;
 import com.swyp.gaezzange.domain.routine.repository.Routine;
 import com.swyp.gaezzange.domain.routine.service.RoutineService;
+import com.swyp.gaezzange.domain.tendency.Tendency;
 import com.swyp.gaezzange.domain.user.repository.User;
 import com.swyp.gaezzange.exception.customException.BizException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.tuple.Triple;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -96,6 +100,26 @@ public class RoutineApplication {
     return routines.stream()
         .map(r -> RoutineDto.from(r))
         .toList();
+  }
+
+  public List<RoutineExecutionResultDto> listRoutineExecutions(User user, LocalDate from,
+      LocalDate to) {
+    Map<Routine, List<RoutineExecution>> executionsByRoutine =
+        routineExecutionService.getRoutineExecutionsByRoutine(user.getUserId(), from, to);
+
+    //TODO implement
+
+    return null;
+  }
+
+  public List<RoutineExecutionResultDto> countRoutineExecutionByDate(User user, LocalDate from,
+      LocalDate to) {
+    Map<LocalDate, Triple<Long/* routineId */, Tendency, Long/* count */>> executionsByRoutine =
+        routineExecutionService.countRoutineExecutionByDate(user.getUserId(), from, to);
+
+    //TODO implement
+
+    return null;
   }
 
   private void validateOwnedRoutine(User user, Routine routine) {

@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface RoutineExecutionRepository extends JpaRepository<RoutineExecution, Long> {
+public interface RoutineExecutionRepository extends JpaRepository<RoutineExecution, Long>, RoutineExecutionRepositoryCustom {
+
   Optional<RoutineExecution> findByRoutineIdAndExecutedDate(Long routineId, LocalDate executedDate);
 }

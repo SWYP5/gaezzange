@@ -1,7 +1,7 @@
 package com.swyp.gaezzange.domain.user.repository;
 
 import com.swyp.gaezzange.api.user.dto.UserInfoForm;
-import com.swyp.gaezzange.domain.tendency.UserTendency;
+import com.swyp.gaezzange.domain.tendency.Tendency;
 import com.swyp.gaezzange.util.jpa.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -46,7 +46,7 @@ public class User extends BaseTimeEntity {
   private String profileImagePath;
 
   @Enumerated(EnumType.STRING)
-  private UserTendency tendency;
+  private Tendency tendency;
 
   public static User from(UserInfoForm form) {
     return User.builder()

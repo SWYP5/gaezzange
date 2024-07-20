@@ -1,7 +1,7 @@
 package com.swyp.gaezzange.domain.feed.repository;
 
 import com.swyp.gaezzange.domain.category.FeedCategory;
-import com.swyp.gaezzange.domain.tendency.UserTendency;
+import com.swyp.gaezzange.domain.tendency.Tendency;
 import com.swyp.gaezzange.util.jpa.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,7 +35,7 @@ public class Feed extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private UserTendency tendency;
+    private Tendency tendency;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -51,7 +51,7 @@ public class Feed extends BaseTimeEntity {
         return userId == this.userId;
     }
 
-    public void updateFeed(UserTendency tendency, FeedCategory category, String content) {
+    public void updateFeed(Tendency tendency, FeedCategory category, String content) {
         this.tendency = tendency;
         this.category = category;
         this.content = content;
