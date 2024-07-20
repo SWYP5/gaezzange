@@ -33,16 +33,19 @@ public class RoutineController {
 
   @Operation(description = "Both startDate and endDate are inclusive.")
   @GetMapping("")
-  public ApiResponse<List<RoutineDto>> getDailyRoutines(@RequestParam LocalDate startDate, @RequestParam LocalDate endDate) {
+  public ApiResponse<List<RoutineDto>> getDailyRoutines(
+      @RequestParam LocalDate startDate,
+      @RequestParam LocalDate endDate
+  ) {
     User user = contextProvider.getUser();
     //TODO cursor 또는 paging 처리 필요?
-    List<RoutineDto> routines= routineApplication.listRoutines(user, startDate, endDate);
+    List<RoutineDto> routines = routineApplication.listRoutines(user, startDate, endDate);
     return ApiResponse.success(routines);
   }
 
   @GetMapping("/{routineId}")
   public ApiResponse<RoutineDto> getRoutine(@PathVariable Long routineId) {
-    RoutineDto routine= routineApplication.getRoutine(routineId);
+    RoutineDto routine = routineApplication.getRoutine(routineId);
     return ApiResponse.success(routine);
   }
 
@@ -54,7 +57,8 @@ public class RoutineController {
   }
 
   @PutMapping("/{routineId}")
-  public ApiResponse updateRoutine(@Valid @RequestBody RoutineForm form, @PathVariable Long routineId) {
+  public ApiResponse updateRoutine(@Valid @RequestBody RoutineForm form,
+      @PathVariable Long routineId) {
     User user = contextProvider.getUser();
     routineApplication.updateRoutine(user, routineId, form);
     return ApiResponse.success(null);

@@ -9,6 +9,7 @@ import com.swyp.gaezzange.domain.user.repository.User;
 import com.swyp.gaezzange.exception.customException.BizException;
 import com.swyp.gaezzange.util.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,7 +36,7 @@ public class UserController {
   }
 
   @PostMapping("/onboarding")
-  public ApiResponse updateUserInfo(@RequestBody UserInfoForm form) {
+  public ApiResponse updateUserInfo(@Valid  @RequestBody UserInfoForm form) {
     UserAuth userAuth = userContextProvider.getUserAuth();
     if (userContextProvider.getUser() != null) {
       throw new BizException("ALREADY_ONBOARDED", "이미 온보딩을 완료했습니다.");

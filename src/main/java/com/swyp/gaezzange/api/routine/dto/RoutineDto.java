@@ -1,6 +1,5 @@
 package com.swyp.gaezzange.api.routine.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.swyp.gaezzange.domain.category.RoutineCategory;
 import com.swyp.gaezzange.domain.routine.repository.Routine;
 import com.swyp.gaezzange.domain.tendency.UserTendency;
@@ -26,7 +25,6 @@ public class RoutineDto {
   @Nullable
   LocalDate endedDate;
   @Nullable
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm:ss", timezone = "Asia/Seoul")
   LocalTime executionTime;
 
   public static RoutineDto from(Routine routine) {

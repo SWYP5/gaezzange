@@ -67,6 +67,7 @@ public class JWTFilter extends OncePerRequestFilter {
       // 프론트에서는 매요청 마다 refresh 토큰 갱신하기
       if (cookies == null) {
         filterChain.doFilter(request, response);
+        return;
       }
       for (Cookie cookie : cookies) {
         if (cookie.getName().equals("refreshToken")) {
