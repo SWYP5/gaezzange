@@ -72,7 +72,7 @@ public class FeedApplication {
         .toList();
   }
 
-  public Object getFeed(Long feedId) {
+  public FeedDetailDto getFeed(Long feedId) {
     Feed feed = feedService.getFeed(feedId);
     User user = userService.getById(feed.getUserId())
         .orElseThrow(() -> new RuntimeException("not found user"));
