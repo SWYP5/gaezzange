@@ -13,6 +13,7 @@ import com.swyp.gaezzange.domain.feed.repository.FeedRepository;
 import com.swyp.gaezzange.domain.user.repository.User;
 import com.swyp.gaezzange.domain.user.repository.UserRepository;
 import com.swyp.gaezzange.exception.customException.BizException;
+import com.swyp.gaezzange.exception.customException.CustomSystemException;
 import com.swyp.gaezzange.exception.customException.InvalidFileException;
 import com.swyp.gaezzange.util.S3.FileStorage;
 import com.swyp.gaezzange.util.S3.FileType;
@@ -58,11 +59,11 @@ public class FeedService {
       feedImageRepository.save(feedImage);
     } catch (InvalidFileException e) {
       feedRepository.delete(savedFeed); // 이미지 업로드 실패 시 피드 삭제
-      throw new BizException("NOT_VALID_IMAGE", "이미지 파일만 업로드할 수 있습니다.");
+      throw new InvalidFileException("이미지 파일만 업로드할 수 있습니다.");
     } catch (Exception e) {
       feedRepository.delete(savedFeed); // 이미지 업로드 실패 시 피드 삭제
       log.error("[FAILED_TO_REGISTER_FEED] userId: {}", userId, e);
-      throw new BizException("FAILED_TO_REGISTER_FEED", e.getMessage());
+      throw new CustomSystemException("FAILED_TO_REGISTER_FEED", e.getMessage());
     }
   }
 
@@ -136,7 +137,7 @@ public class FeedService {
       } catch (InvalidFileException e) {
         throw new InvalidFileException("이미지 파일만 업로드할 수 있습니다.");
       } catch (Exception e) {
-        throw new BizException("FILE_UPDATE_FAILED", "파일 업데이트에 실패했습니다.");
+        throw new CustomSystemException("FILE_UPDATE_FAILED", "파일 업데이트에 실패했습니다.");
       }
     }
 
@@ -166,7 +167,7 @@ public class FeedService {
       feedImageRepository.save(feedImage);
     } catch (Exception e) {
       log.error("FAILED_TO_DELETE_FEED: {}", feedImage.getFeedImagePath(), e);
-      throw new BizException("DELETE_FAILED", "삭제에 실패했습니다.");
+      throw new CustomSystemException("DELETE_FAILED", "삭제에 실패했습니다.");
     }
 
   }

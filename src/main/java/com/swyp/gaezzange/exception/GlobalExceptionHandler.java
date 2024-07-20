@@ -1,6 +1,7 @@
 package com.swyp.gaezzange.exception;
 
 import com.swyp.gaezzange.exception.customException.BizException;
+import com.swyp.gaezzange.exception.customException.CustomSystemException;
 import com.swyp.gaezzange.util.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,12 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(value = { BizException.class })
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public ApiResponse handleCustomException(BizException ex) {
+    return ApiResponse.fail(ex.getCode(), ex.getMessage(), null);
+  }
+
+  @ExceptionHandler(value = { CustomSystemException.class })
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ApiResponse handleCustomException(CustomSystemException ex) {
     return ApiResponse.fail(ex.getCode(), ex.getMessage(), null);
   }
 
