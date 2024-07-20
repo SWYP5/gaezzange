@@ -6,6 +6,7 @@ import com.swyp.gaezzange.api.feed.dto.feed.FeedForm;
 import com.swyp.gaezzange.api.feed.dto.feed.FeedSearchDto;
 import com.swyp.gaezzange.authentication.CustomOAuth2User;
 import com.swyp.gaezzange.authentication.UserContextProvider;
+import com.swyp.gaezzange.domain.feed.application.FeedApplication;
 import com.swyp.gaezzange.domain.user.auth.repository.UserAuth;
 import com.swyp.gaezzange.domain.feed.like.feed.service.FeedLikeService;
 import com.swyp.gaezzange.domain.feed.service.FeedService;
@@ -33,26 +34,27 @@ import org.springframework.web.multipart.MultipartFile;
 public class FeedController {
 
     private final UserContextProvider userContextProvider;
-    private final FeedService feedService;
-    private final FeedLikeService feedLikeService;
+    private final FeedApplication feedApplication;
+//    private final FeedService feedService;
+//    private final FeedLikeService feedLikeService;
 
     @GetMapping()
-    public ApiResponse<List<FeedDto>> getAllFeed(FeedSearchDto feedSearchDto) {
-        return ApiResponse.success(feedService.getAllFeed(feedSearchDto));
+    public ApiResponse<List<FeedDto>> getFeeds(FeedSearchDto feedSearchDto) {
+        return ApiResponse.success(feedApplication.listFeeds(feedSearchDto));
     }
 
     @GetMapping("/{feedId}")
-    public ApiResponse<FeedDetailDto> getDetailByFeedId(@PathVariable Long feedId) {
-        return ApiResponse.success(feedService.getFeed(feedId));
+    public ApiResponse<FeedDetailDto> getFeed(@PathVariable Long feedId) {
+        return ApiResponse.success(feedApplication.getFeed(feedId));
     }
 
     @PostMapping()
-    public ApiResponse<FeedDetailDto> registerFeed(
+    public ApiResponse<FeedDetailDto> addFeed(
         @RequestPart("feedForm") FeedForm feedForm,
         @RequestPart(value = "feedImage", required = false) MultipartFile feedImageFile
     )
     {
-        feedService.registerFeed(userContextProvider.getUserId(), feedForm, feedImageFile);;
+        feedApplication.addFeed(userContextProvider.getUserId(), feedForm, feedImageFile);;
         return ApiResponse.success(null);
     }
 
@@ -63,19 +65,19 @@ public class FeedController {
         @RequestPart(value = "feedImage", required = false) MultipartFile feedImageFile
     )
     {
-        feedService.updateFeed(userContextProvider.getUserId(), feedId, feedForm, feedImageFile);
+        feedApplication.updateFeed(userContextProvider.getUserId(), feedId, feedForm, feedImageFile);
         return ApiResponse.success(null);
     }
 
     @DeleteMapping("/{feedId}")
-    public ApiResponse<FeedDetailDto> deleteFeed(@PathVariable Long feedId) {
-        feedService.deleteFeed(userContextProvider.getUserId(), feedId);
+    public ApiResponse<FeedDetailDto> removeFeed(@PathVariable Long feedId) {
+        feedApplication.removeFeed(userContextProvider.getUserId(), feedId);
         return ApiResponse.success(null);
     }
 
     @PostMapping("/{feedId}/like-toggle")
     public ApiResponse<String> likeFeed(@PathVariable Long feedId) {
-        feedLikeService.toggleLike(userContextProvider.getUserId(), feedId);
+        feedApplication.toggleLike(userContextProvider.getUserId(), feedId);
         return ApiResponse.success(null);
     }
 }

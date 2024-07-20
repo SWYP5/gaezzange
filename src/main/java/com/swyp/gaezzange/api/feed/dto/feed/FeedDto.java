@@ -19,4 +19,6 @@ public class FeedDto {
   private String profileImagePath;
   private String feedContent;
   private String feedImagePath;
+  private Long feedLikeCount;
+  private Long feedCommentCount;
 }

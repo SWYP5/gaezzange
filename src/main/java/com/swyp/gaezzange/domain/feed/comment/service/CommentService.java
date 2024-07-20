@@ -50,6 +50,10 @@ public class CommentService {
     commentRepository.save(comment);
   }
 
+  public long commentCountByFeedId(long feedId) {
+    return commentRepository.countByFeedIdAndParentCommentIsNullAndDeletedFalse(feedId);
+  }
+
   private Optional<Comment> getOptionalComment(Long commentId) {
     if (commentId == null) {
       return Optional.empty();
