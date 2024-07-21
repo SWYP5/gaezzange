@@ -23,7 +23,7 @@ public class RoutineService {
 
   public List<Routine> listRoutinesOnTargetDate(Long userId, LocalDate startDate, LocalDate endDate) {
     return repository.findAllByUserIdAndStartedDateLessThanEqualAndEndedDateGreaterThanEqualAndDeletedIsFalse(
-        userId, startDate, endDate
+        userId, endDate, startDate
     );
   }
 

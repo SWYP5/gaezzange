@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 public interface RoutineRepository extends JpaRepository<Routine, Long> {
 
   List<Routine> findAllByUserIdAndStartedDateLessThanEqualAndEndedDateGreaterThanEqualAndDeletedIsFalse(
-      Long userId, LocalDate startDate, LocalDate endDate);
+      Long userId, LocalDate endDate, LocalDate startedDate);
 }

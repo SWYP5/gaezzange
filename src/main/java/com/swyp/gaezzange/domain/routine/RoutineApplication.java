@@ -38,6 +38,7 @@ public class RoutineApplication {
             .userId(user.getUserId())
             .category(form.getCategory())
             .name(form.getName())
+            .emoji(form.getEmoji())
             .description(form.getDescription())
             .tendency(form.getTendency())
             .startedDate(form.getStartedDate())
@@ -101,6 +102,9 @@ public class RoutineApplication {
   }
 
   public List<RoutineDto> listRoutines(User user, LocalDate startDate, LocalDate endDate) {
+    if(startDate.isAfter(endDate)) {
+      throw new BizException("INVALID_PARAMETERS", "startDate가 endDate 이후 입니다.");
+    }
     List<Routine> routines = routineService.listRoutinesOnTargetDate(user.getUserId(), startDate,
         endDate);
     Set<DayOfWeek> dayOfWeekSet = DateUtil.getDaysOfWeekBetween(startDate, endDate);
