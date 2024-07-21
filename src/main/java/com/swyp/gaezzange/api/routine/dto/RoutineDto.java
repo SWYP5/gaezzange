@@ -19,6 +19,7 @@ public class RoutineDto {
   private Tendency tendency;
   private RoutineCategory category;
   private String name;
+  private String description;
   private Long emoji;
   private Set<DayOfWeek> daysOfWeek;
   private LocalDate startedDate;
@@ -34,6 +35,7 @@ public class RoutineDto {
         .tendency(routine.getTendency())
         .category(routine.getCategory())
         .name(routine.getName())
+        .description(routine.getDescription())
         .emoji(routine.getEmoji())
         .daysOfWeek(routine.getDaysOfWeek())
         .startedDate(routine.getStartedDate())

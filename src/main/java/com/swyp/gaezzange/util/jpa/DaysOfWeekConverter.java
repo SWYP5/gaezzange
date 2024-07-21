@@ -1,8 +1,8 @@
 package com.swyp.gaezzange.util.jpa;
 
-import com.swyp.gaezzange.domain.routine.DayOfWeek;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
+import java.time.DayOfWeek;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;

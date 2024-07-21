@@ -1,8 +1,9 @@
 package com.swyp.gaezzange.api.routine.execution;
 
+import com.swyp.gaezzange.api.routine.execution.dto.RoutineExecutionCountDto;
+import com.swyp.gaezzange.api.routine.execution.dto.RoutineExecutionResultDto;
 import com.swyp.gaezzange.authentication.UserContextProvider;
 import com.swyp.gaezzange.domain.routine.RoutineApplication;
-import com.swyp.gaezzange.domain.routine.execution.repository.RoutineExecution;
 import com.swyp.gaezzange.domain.user.repository.User;
 import com.swyp.gaezzange.util.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,7 +28,14 @@ public class RoutineExecutionController {
   private final RoutineApplication routineApplication;
 
   @GetMapping("")
-  public ApiResponse<List<RoutineExecution>> listRoutineExecutions(@RequestParam LocalDate from, @RequestParam LocalDate to) {
+  public ApiResponse<List<RoutineExecutionResultDto>> listRoutineExecutions(@RequestParam LocalDate from, @RequestParam LocalDate to) {
+    User user = userContextProvider.getUser();
+    routineApplication.listRoutineExecutions(user, from, to);
+    return ApiResponse.success(null);
+  }
+
+  @GetMapping("/count")
+  public ApiResponse<List<RoutineExecutionCountDto>> getRoutineExecutionCount(@RequestParam LocalDate from, @RequestParam LocalDate to) {
     User user = userContextProvider.getUser();
     routineApplication.listRoutineExecutions(user, from, to);
     return ApiResponse.success(null);

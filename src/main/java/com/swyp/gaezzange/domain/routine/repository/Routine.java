@@ -59,6 +59,9 @@ public class Routine extends BaseTimeEntity {
   private String name;
 
   @Column
+  private String description;
+
+  @Column
   private Long emoji;
 
   @Column(nullable = false)
@@ -83,6 +86,7 @@ public class Routine extends BaseTimeEntity {
     category = form.getCategory();
     name = form.getName();
     emoji = form.getEmoji();
+    description = form.getDescription();
     startedDate = form.getStartedDate();
     endedDate = form.getEndedDate();
     executionTime = form.getExecutionTime();

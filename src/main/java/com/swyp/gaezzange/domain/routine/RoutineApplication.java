@@ -10,10 +10,14 @@ import com.swyp.gaezzange.domain.routine.service.RoutineService;
 import com.swyp.gaezzange.domain.tendency.Tendency;
 import com.swyp.gaezzange.domain.user.repository.User;
 import com.swyp.gaezzange.exception.customException.BizException;
+import com.swyp.gaezzange.util.DateUtil;
+import com.swyp.gaezzange.util.SetUtil;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.tuple.Triple;
 import org.springframework.stereotype.Component;
@@ -33,6 +37,8 @@ public class RoutineApplication {
         Routine.builder()
             .userId(user.getUserId())
             .category(form.getCategory())
+            .name(form.getName())
+            .description(form.getDescription())
             .tendency(form.getTendency())
             .startedDate(form.getStartedDate())
             .endedDate(form.getEndedDate())
@@ -97,7 +103,10 @@ public class RoutineApplication {
   public List<RoutineDto> listRoutines(User user, LocalDate startDate, LocalDate endDate) {
     List<Routine> routines = routineService.listRoutinesOnTargetDate(user.getUserId(), startDate,
         endDate);
+    Set<DayOfWeek> dayOfWeekSet = DateUtil.getDaysOfWeekBetween(startDate, endDate);
+
     return routines.stream()
+        .filter(it -> SetUtil.hasIntersection(it.getDaysOfWeek(), dayOfWeekSet))
         .map(r -> RoutineDto.from(r))
         .toList();
   }

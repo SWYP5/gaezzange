@@ -24,6 +24,8 @@ public class RoutineForm {
   @NotBlank
   private String name;
 
+  private String description;
+
   @Nullable
   private Long emoji;
 
