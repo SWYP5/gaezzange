@@ -38,7 +38,7 @@ public class UserController {
   @PostMapping("/onboarding")
   public ApiResponse onboard(@Valid @RequestBody UserInfoForm form) {
     UserAuth userAuth = userContextProvider.getUserAuth();
-    if (userContextProvider.getUser() != null) {
+    if (userAuth.getUser() != null) {
       throw new BizException("ALREADY_ONBOARDED", "이미 온보딩을 완료했습니다.");
     }
 

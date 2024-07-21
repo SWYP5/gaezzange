@@ -79,7 +79,7 @@ public class Routine extends BaseTimeEntity {
 
   @Setter
   @Column(nullable = false)
-  private Boolean deleted;
+  private Boolean deleted = false;
 
   public void update(RoutineForm form) {
     tendency = form.getTendency();
