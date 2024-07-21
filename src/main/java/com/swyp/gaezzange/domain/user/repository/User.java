@@ -1,6 +1,9 @@
 package com.swyp.gaezzange.domain.user.repository;
 
+import static org.apache.logging.log4j.util.Strings.isBlank;
+
 import com.swyp.gaezzange.api.user.dto.UserInfoForm;
+import com.swyp.gaezzange.api.user.dto.UserProfileForm;
 import com.swyp.gaezzange.domain.tendency.Tendency;
 import com.swyp.gaezzange.util.jpa.BaseTimeEntity;
 import jakarta.persistence.Column;
@@ -53,6 +56,13 @@ public class User extends BaseTimeEntity {
         .nickname(form.getNickname())
         .profileImagePath(form.getProfileImagePath())
         .tendency(form.getTendency())
+        .build();
+  }
+
+  public User updateProfile(UserProfileForm form) {
+    return User.builder()
+        .nickname(isBlank(form.getNickname()) ? this.nickname : form.getNickname())
+        .profileImagePath(isBlank(form.getProfileImagePath()) ? this.profileImagePath : form.getProfileImagePath())
         .build();
   }
 }

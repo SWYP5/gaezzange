@@ -1,6 +1,7 @@
 package com.swyp.gaezzange.domain.user;
 
 import com.swyp.gaezzange.api.user.dto.UserInfoForm;
+import com.swyp.gaezzange.api.user.dto.UserProfileForm;
 import com.swyp.gaezzange.domain.user.auth.repository.UserAuth;
 import com.swyp.gaezzange.domain.user.auth.service.UserAuthService;
 import com.swyp.gaezzange.domain.user.repository.User;
@@ -22,5 +23,10 @@ public class UserApplication {
     User user = userService.saveUser(User.from((form)));
     userAuthService.updateUser(userAuth, user);
     return user;
+  }
+
+  @Transactional
+  public void updateProfile(User user, UserProfileForm form) {
+    userService.saveUser(user.updateProfile((form)));
   }
 }

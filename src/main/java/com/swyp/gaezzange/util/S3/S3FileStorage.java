@@ -3,6 +3,7 @@ package com.swyp.gaezzange.util.S3;
 import com.swyp.gaezzange.exception.customException.InvalidFileException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,10 +37,9 @@ public class S3FileStorage implements FileStorage {
   }
 
   @Override
-  public String uploadFile(FileType fileType, MultipartFile file) throws IOException {
+  public String upload(FileType fileType, MultipartFile file) throws IOException {
     validateImageFile(file);
-    String folder = fileType.name().toLowerCase();
-    String key = folder + "/" + UUID.randomUUID() + "_" + file.getOriginalFilename();
+    String key = fileType.getBasePath() + "/" + UUID.randomUUID() + "_" + LocalDateTime.now();
     PutObjectRequest putObjectRequest = PutObjectRequest.builder()
         .bucket(bucketName)
         .key(key)
@@ -68,7 +68,7 @@ public class S3FileStorage implements FileStorage {
   public String updateFile(FileType fileType, String oldKey, MultipartFile file) throws IOException {
     validateImageFile(file);
     deleteFile(oldKey);
-    return uploadFile(fileType, file);
+    return upload(fileType, file);
   }
 
   @Override

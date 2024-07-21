@@ -93,7 +93,7 @@ public class FeedApplication {
   public void addFeed(long userId, FeedForm feedForm, MultipartFile feedImageFile) {
     Feed savedFeed = feedService.registerFeed(userId, feedForm);
     try {
-      String imagePath = fileStorage.uploadFile(FileType.FEED, feedImageFile);
+      String imagePath = fileStorage.upload(FileType.FEED_IMAGE, feedImageFile);
       FeedImage feedImage = FeedImage.builder()
           .feedId(savedFeed.getFeedId())
           .feedImagePath(imagePath)
@@ -124,11 +124,11 @@ public class FeedApplication {
       try {
         if (feedImage != null) {
           // 기존 이미지를 업데이트
-          String newImagePath = fileStorage.updateFile(FileType.FEED, feedImage.getFeedImagePath(), feedImageFile);
+          String newImagePath = fileStorage.updateFile(FileType.FEED_IMAGE, feedImage.getFeedImagePath(), feedImageFile);
           feedImage.updateFeedImagePath(newImagePath);
         } else {
           // 새 이미지를 삽입
-          String newImagePath = fileStorage.uploadFile(FileType.FEED, feedImageFile);
+          String newImagePath = fileStorage.upload(FileType.FEED_IMAGE, feedImageFile);
           feedImage = FeedImage.builder()
               .feedId(feedId)
               .feedImagePath(newImagePath)

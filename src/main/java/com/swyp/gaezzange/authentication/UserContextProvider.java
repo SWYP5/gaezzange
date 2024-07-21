@@ -30,7 +30,7 @@ public class UserContextProvider {
   public User getUser() {
     return userAuthService.getById(getContext().getUserAuthId())
         .map(UserAuth::getUser)
-        .orElse(null);
+        .orElseThrow(() -> new BizException("USER_NOT_FOUND", "유저 정보가 없습니다."));
   }
 
   public long getUserId() {
