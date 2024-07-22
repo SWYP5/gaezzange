@@ -1,5 +1,6 @@
 package com.swyp.gaezzange.jwt;
 
+import com.swyp.gaezzange.domain.user.UserApplication;
 import com.swyp.gaezzange.domain.user.auth.repository.AuthToken;
 import com.swyp.gaezzange.domain.user.auth.repository.AuthTokenRepository;
 import com.swyp.gaezzange.domain.user.auth.repository.UserAuth;
@@ -9,7 +10,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -29,6 +29,7 @@ public class JWTFilter extends OncePerRequestFilter {
   private final JWTUtil jwtUtil;
   private final AuthTokenRepository authTokenRepository;
   private final UserAuthService userAuthService;
+  private final UserApplication userApplication;
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -52,31 +53,21 @@ public class JWTFilter extends OncePerRequestFilter {
         if (jwtUtil.isNotOnboarded(accessToken)) {
           refreshAccessToken(accessToken, response);
           setSecurityContextByToken(accessToken);
-        } else if (!jwtUtil.isExpired(accessToken)) {
+        } else if(jwtUtil.isPastWeekToken(accessToken)) {
+          refreshAccessToken(accessToken, response);
+          setSecurityContextByToken(accessToken);
+          userApplication.syncUserTendency(jwtUtil.getUserUserId(accessToken));
+        }else if (!jwtUtil.isExpired(accessToken)) {
           setSecurityContextByToken(accessToken);
         }
       } catch (JwtException e) {
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid Token");
         return;
       }
-    } else {
-      Cookie[] cookies = request.getCookies();
-      //TODO 쿠키에서 리프레시 토큰 찾는 로직 지우기
-      // 헤더로 리프레스 주고 매번 같이 받기
-      // 만료되었으면 refresh 새로 갱신하기
-      // 프론트에서는 매요청 마다 refresh 토큰 갱신하기
-      if (cookies == null) {
-        filterChain.doFilter(request, response);
-        return;
-      }
-      for (Cookie cookie : cookies) {
-        if (cookie.getName().equals("refreshToken")) {
-          accessToken = cookie.getValue();
-          setSecurityContextByToken(accessToken);
-        }
-      }
     }
 
+    // TODO 헤더로 리프레시 주고 받기
+    // 401응답받으면 프론트 헤더에 refresh 토큰 주고 갱신되도록 작업
     filterChain.doFilter(request, response);
   }
 

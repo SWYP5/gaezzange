@@ -1,5 +1,7 @@
 package com.swyp.gaezzange.jwt;
 
+import static com.swyp.gaezzange.util.DateUtil.getStartOfWeek;
+
 import com.swyp.gaezzange.domain.user.auth.repository.UserAuth;
 import com.swyp.gaezzange.domain.user.repository.User;
 import io.jsonwebtoken.Claims;
@@ -7,6 +9,8 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -58,10 +62,24 @@ public class JWTUtil {
     return userId == null;
   }
 
+  public boolean isPastWeekToken(String token) {
+    LocalDateTime expiration = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody()
+        .getExpiration().toInstant()
+        .atZone(ZoneId.systemDefault())
+        .toLocalDateTime();
+    return expiration.isBefore(getStartOfWeek().atStartOfDay());
+  }
+
   public Long getUserAuthId(String token) {
     Long userAuthId = parseClaims(token).getBody().get("userAuthId", Long.class);
     log.debug("userAuthId from token: {}", userAuthId);
     return userAuthId;
+  }
+
+  public Long getUserUserId(String token) {
+    Long userId = parseClaims(token).getBody().get("userId", Long.class);
+    log.debug("userId from token: {}", userId);
+    return userId;
   }
 
   public String createJwt(String category, Long userAuthId, Long userId, String email, String role,

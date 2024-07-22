@@ -2,6 +2,9 @@ package com.swyp.gaezzange.util;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,5 +29,17 @@ public class DateUtil {
     }
 
     return daysOfWeek;
+  }
+
+  public static LocalDate getStartOfWeek() {
+    // 현재 날짜와 시간을 가져옵니다.
+    LocalDateTime now = LocalDateTime.now();
+
+    // 현재 날짜를 기준으로 해당 주의 월요일을 찾습니다.
+    return now.toLocalDate().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+  }
+
+  public static LocalDate getStartOfLastWeek() {
+    return getStartOfWeek().minus(1, ChronoUnit.WEEKS);
   }
 }

@@ -20,6 +20,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Builder
 @Entity
@@ -48,6 +49,7 @@ public class User extends BaseTimeEntity {
   @Column
   private String profileImagePath;
 
+  @Setter
   @Enumerated(EnumType.STRING)
   private Tendency tendency;
 
