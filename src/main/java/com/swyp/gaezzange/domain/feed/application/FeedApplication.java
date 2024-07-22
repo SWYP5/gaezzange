@@ -41,8 +41,10 @@ public class FeedApplication {
 
   public List<FeedDto> listFeeds(FeedSearchDto feedSearchDto) {
     List<Feed> feeds = feedService.getAllFeed(feedSearchDto);
-    List<User> users = userService.findAllByUserIds(feeds.stream().map(Feed::getUserId).collect(Collectors.toList()));
-    List<FeedImage> feedImages = feedImageService.findAllByFeedIds(feeds.stream().map(Feed::getFeedId).collect(Collectors.toList()));
+    List<User> users = userService.findAllByUserIds(
+        feeds.stream().map(Feed::getUserId).collect(Collectors.toList()));
+    List<FeedImage> feedImages = feedImageService.findAllByFeedIds(
+        feeds.stream().map(Feed::getFeedId).collect(Collectors.toList()));
 
     // userId와 User 매핑
     Map<Long, User> userMap = users.stream()
@@ -81,30 +83,32 @@ public class FeedApplication {
     long feedLikeCount = feedLikeService.countByFeedId(feedId);
 
     return FeedDetailDto.builder()
-      .nickname(user.getNickname())
-      .feedContent(feed.getContent())
-      .feedImagePath(user.getProfileImagePath())
-      .likeCount(feedLikeCount)
-      .commentCount(commentCount)
-      .build();
+        .nickname(user.getNickname())
+        .feedContent(feed.getContent())
+        .feedImagePath(user.getProfileImagePath())
+        .likeCount(feedLikeCount)
+        .commentCount(commentCount)
+        .build();
   }
 
   @Transactional
   public void addFeed(long userId, FeedForm feedForm, MultipartFile feedImageFile) {
     Feed savedFeed = feedService.registerFeed(userId, feedForm);
-    try {
-      String imagePath = fileStorage.upload(FileType.FEED_IMAGE, feedImageFile);
-      FeedImage feedImage = FeedImage.builder()
-          .feedId(savedFeed.getFeedId())
-          .feedImagePath(imagePath)
-          .deleted(false)
-          .build();
-      feedImageService.saveFeedImage(feedImage);
-    } catch (InvalidFileException e) {
-      throw new BizException("NOT_VALID_IMAGE", "이미지 파일만 업로드할 수 있습니다.");
-    } catch (Exception e) {
-      log.error("[FAILED_TO_REGISTER_FEED] userId: {}", userId, e);
-      throw new BizException("FAILED_TO_REGISTER_FEED", e.getMessage());
+    if (feedImageFile != null) {
+      try {
+        String imagePath = fileStorage.upload(FileType.FEED_IMAGE, feedImageFile);
+        FeedImage feedImage = FeedImage.builder()
+            .feedId(savedFeed.getFeedId())
+            .feedImagePath(imagePath)
+            .deleted(false)
+            .build();
+        feedImageService.saveFeedImage(feedImage);
+      } catch (InvalidFileException e) {
+        throw new BizException("NOT_VALID_IMAGE", "이미지 파일만 업로드할 수 있습니다.");
+      } catch (Exception e) {
+        log.error("[FAILED_TO_REGISTER_FEED] userId: {}", userId, e);
+        throw new BizException("FAILED_TO_REGISTER_FEED", e.getMessage());
+      }
     }
   }
 
@@ -124,7 +128,8 @@ public class FeedApplication {
       try {
         if (feedImage != null) {
           // 기존 이미지를 업데이트
-          String newImagePath = fileStorage.updateFile(FileType.FEED_IMAGE, feedImage.getFeedImagePath(), feedImageFile);
+          String newImagePath = fileStorage.updateFile(FileType.FEED_IMAGE,
+              feedImage.getFeedImagePath(), feedImageFile);
           feedImage.updateFeedImagePath(newImagePath);
         } else {
           // 새 이미지를 삽입

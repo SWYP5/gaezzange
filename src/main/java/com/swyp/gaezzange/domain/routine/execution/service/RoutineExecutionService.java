@@ -24,12 +24,25 @@ public class RoutineExecutionService {
     return repository.findByRoutineIdAndExecutedDate(routineId, executedDate);
   }
 
+  public List<RoutineExecution> listRoutineExecution(Long routineId) {
+    return repository.findAllByRoutineId(routineId);
+  }
+
+  @Transactional
   public RoutineExecution save(RoutineExecution routineExecution) {
     return repository.save(routineExecution);
   }
 
+  @Transactional
   public void delete(RoutineExecution routineExecution) {
     repository.delete(routineExecution);
+  }
+
+  @Transactional
+  public void deleteRoutineExecutions(List<RoutineExecution> routineExecutions) {
+    List<Long> ids = routineExecutions.stream().map(RoutineExecution::getRoutineExecutionId)
+            .toList();
+    repository.deleteAllByIdInQuery(ids);
   }
 
   public Map<Routine, List<RoutineExecution>> getRoutineExecutionsByRoutine(

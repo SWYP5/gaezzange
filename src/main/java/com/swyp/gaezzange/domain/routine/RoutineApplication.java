@@ -55,13 +55,22 @@ public class RoutineApplication {
     validateOwnedRoutine(user, routine);
 
     routine.update(form);
+    if (form.getEndedDate() != null && form.getStartedDate() != null) {
+      List<RoutineExecution> executions = routineExecutionService.listRoutineExecution(routineId)
+          .stream().filter(
+              it -> it.getExecutedDate().isBefore(form.getStartedDate()) || it.getExecutedDate()
+                  .isAfter(form.getEndedDate())).toList();
+      routineExecutionService.deleteRoutineExecutions(executions);
+    }
   }
 
   @Transactional
   public void deleteRoutine(User user, Long routineId) {
     Routine routine = routineService.findRoutineById(routineId);
+    List<RoutineExecution> executions = routineExecutionService.listRoutineExecution(routineId);
     validateOwnedRoutine(user, routine);
 
+    routineExecutionService.deleteRoutineExecutions(executions);
     routine.setDeleted(true);
   }
 
@@ -69,6 +78,10 @@ public class RoutineApplication {
   public void addRoutineExecutionIfNotExist(User user, Long routineId, LocalDate targetDate) {
     Routine routine = routineService.findRoutineById(routineId);
     validateOwnedRoutine(user, routine);
+    if (targetDate.isAfter(routine.getEndedDate()) || targetDate.isBefore(
+        routine.getStartedDate())) {
+      throw new BizException("INVALID_TARGET_DATE", "루틴 설정 기간에 포함되지 않는 날짜입니다.");
+    }
 
     Optional<RoutineExecution> routineExecution = routineExecutionService.getRoutine(routineId,
         targetDate);
@@ -102,7 +115,7 @@ public class RoutineApplication {
   }
 
   public List<RoutineDto> listRoutines(User user, LocalDate startDate, LocalDate endDate) {
-    if(startDate.isAfter(endDate)) {
+    if (startDate.isAfter(endDate)) {
       throw new BizException("INVALID_PARAMETERS", "startDate가 endDate 이후 입니다.");
     }
     List<Routine> routines = routineService.listRoutinesOnTargetDate(user.getUserId(), startDate,

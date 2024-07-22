@@ -65,7 +65,7 @@ public class RoutineExecutionRepositoryImpl implements RoutineExecutionRepositor
                 .and(qRoutineExecution.executedDate.between(from, to))) // both are inclusive
         .where(
             qRoutine.deleted.isFalse().and(qRoutine.userId.eq(userId))
-                .and(qRoutine.startedDate.loe(from).and(qRoutine.endedDate.goe(to)))
+                .and(qRoutine.startedDate.loe(to).and(qRoutine.endedDate.goe(from)))
         ).fetch();
   }
 }
