@@ -3,6 +3,7 @@ package com.swyp.gaezzange.domain.routine;
 import com.swyp.gaezzange.api.routine.dto.RoutineDto;
 import com.swyp.gaezzange.api.routine.dto.RoutineForm;
 import com.swyp.gaezzange.api.routine.execution.dto.RoutineExecutionResultDto;
+import com.swyp.gaezzange.domain.routine.execution.dto.RoutineExecutionCount;
 import com.swyp.gaezzange.domain.routine.execution.repository.RoutineExecution;
 import com.swyp.gaezzange.domain.routine.execution.service.RoutineExecutionService;
 import com.swyp.gaezzange.domain.routine.repository.Routine;
@@ -14,18 +15,20 @@ import com.swyp.gaezzange.util.DateUtil;
 import com.swyp.gaezzange.util.SetUtil;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.tuple.Triple;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class RoutineApplication {
 
   private final RoutineService routineService;
@@ -133,24 +136,43 @@ public class RoutineApplication {
     Map<Routine, List<RoutineExecution>> executionsByRoutine =
         routineExecutionService.getRoutineExecutionsByRoutine(user.getUserId(), from, to);
 
-    //TODO implement
+    log.info("executionsByRoutine {}", executionsByRoutine);
 
-    return null;
+    return executionsByRoutine.entrySet().stream()
+        .map(entry ->
+            new RoutineExecutionResultDto(
+                RoutineDto.from(entry.getKey()),
+                extractExecutionDates(entry.getValue())
+            )
+        ).toList();
   }
 
-  public List<RoutineExecutionResultDto> countRoutineExecutionByDate(User user, LocalDate from,
-      LocalDate to) {
-    Map<LocalDate, Triple<Long/* routineId */, Tendency, Long/* count */>> executionsByRoutine =
-        routineExecutionService.countRoutineExecutionByDate(user.getUserId(), from, to);
+  public Map<LocalDate, RoutineExecutionCount> countRoutineExecution(
+      User user, LocalDate from, LocalDate to
+  ) {
+    Map<Routine, List<RoutineExecution>> executionsByRoutine =
+        routineExecutionService.getRoutineExecutionsByRoutine(user.getUserId(), from, to);
 
-    //TODO implement
+    Map<LocalDate, RoutineExecutionCount> countMap = new HashMap<>();
+    executionsByRoutine.entrySet().forEach(entry -> {
+      Tendency tendency = entry.getKey().getTendency();
+      List<LocalDate> executionDates = extractExecutionDates(entry.getValue());
+      for (LocalDate ed : executionDates) {
+        countMap.computeIfAbsent(ed, k -> new RoutineExecutionCount())
+            .plusByTendency(tendency);
+      }
+    });
 
-    return null;
+    return countMap;
   }
 
   private void validateOwnedRoutine(User user, Routine routine) {
     if (!user.getUserId().equals(routine.getUserId())) {
       throw new BizException("NOT_OWNED_ROUTINE", "본인의 루틴이 아닙니다.");
     }
+  }
+
+  private List<LocalDate> extractExecutionDates(List<RoutineExecution> executions) {
+    return executions.stream().map(RoutineExecution::getExecutedDate).toList();
   }
 }

@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(value = { CustomSystemException.class })
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   public ApiResponse handleCustomException(CustomSystemException ex) {
     return ApiResponse.fail(ex.getCode(), ex.getMessage(), null);
   }
@@ -27,6 +27,7 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(value = { Exception.class })
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   public ApiResponse handleException(Exception ex) {
+    log.error("", ex);
     return ApiResponse.fail("ERROR", ex.getMessage(), null);
   }
 }

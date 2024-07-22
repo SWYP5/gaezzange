@@ -1,14 +1,15 @@
 package com.swyp.gaezzange.api.routine.execution;
 
-import com.swyp.gaezzange.api.routine.execution.dto.RoutineExecutionCountDto;
 import com.swyp.gaezzange.api.routine.execution.dto.RoutineExecutionResultDto;
 import com.swyp.gaezzange.authentication.UserContextProvider;
 import com.swyp.gaezzange.domain.routine.RoutineApplication;
+import com.swyp.gaezzange.domain.routine.execution.dto.RoutineExecutionCount;
 import com.swyp.gaezzange.domain.user.repository.User;
 import com.swyp.gaezzange.util.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,17 +29,17 @@ public class RoutineExecutionController {
   private final RoutineApplication routineApplication;
 
   @GetMapping("")
-  public ApiResponse<List<RoutineExecutionResultDto>> listRoutineExecutions(@RequestParam LocalDate from, @RequestParam LocalDate to) {
+  public ApiResponse<List<RoutineExecutionResultDto>> listRoutineExecutions(
+      @RequestParam LocalDate from, @RequestParam LocalDate to) {
     User user = userContextProvider.getUser();
-    routineApplication.listRoutineExecutions(user, from, to);
-    return ApiResponse.success(null);
+    return ApiResponse.success(routineApplication.listRoutineExecutions(user, from, to));
   }
 
   @GetMapping("/count")
-  public ApiResponse<List<RoutineExecutionCountDto>> getRoutineExecutionCount(@RequestParam LocalDate from, @RequestParam LocalDate to) {
+  public ApiResponse<Map<LocalDate, RoutineExecutionCount>> getRoutineExecutionCount(
+      @RequestParam LocalDate from, @RequestParam LocalDate to) {
     User user = userContextProvider.getUser();
-    routineApplication.listRoutineExecutions(user, from, to);
-    return ApiResponse.success(null);
+    return ApiResponse.success(routineApplication.countRoutineExecution(user, from, to));
   }
 
   @PostMapping("/{routineId}")
