@@ -1,4 +1,4 @@
-package com.swyp.gaezzange.domain.feed.application;
+package com.swyp.gaezzange.domain.feed;
 
 import com.swyp.gaezzange.api.feed.dto.feed.FeedDetailDto;
 import com.swyp.gaezzange.api.feed.dto.feed.FeedDto;
