@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CommentForm {
-    private String commentParentId;
+    private Long commentParentId;
     private String commentContent;
 }

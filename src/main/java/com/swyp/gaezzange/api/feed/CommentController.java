@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "CommentController", description = "Comment API")
+@RequestMapping(("/v1/feed"))
 @RestController
 @RequiredArgsConstructor
 public class CommentController {
@@ -25,30 +27,30 @@ public class CommentController {
   private final CommentApplication commentApplication;
 
 
-  @GetMapping("/v1/feed/{feedId}/{commentId}")
+  @GetMapping("/{feedId}/{commentId}")
   public ApiResponse<String> getComment(@PathVariable Long commentId) {
     return ApiResponse.success(commentApplication.getComment(commentId));
   }
 
-  @PostMapping("/v1/feed/{feedId}/comment")
+  @PostMapping("/{feedId}/comment")
   public ApiResponse<String> addComment(@PathVariable Long feedId, @RequestBody CommentForm commentForm) {
     commentApplication.addComment(userContextProvider.getUserId(), feedId, commentForm);
     return ApiResponse.success(null);
   }
 
-  @PutMapping("/v1/feed/{feedId}/{commentId}")
+  @PutMapping("/{feedId}/{commentId}")
   public ApiResponse<String> updateComment(@AuthenticationPrincipal UserAuth userAuth, @PathVariable Long commentId, @RequestBody CommentForm commentForm) {
     commentApplication.updateComment(userContextProvider.getUserId(), commentId, commentForm);
     return ApiResponse.success(null);
   }
 
-  @DeleteMapping("/v1/feed/{feedId}/{commentId}")
+  @DeleteMapping("/{feedId}/{commentId}")
   public ApiResponse<String> deleteComment(@AuthenticationPrincipal UserAuth userAuth, @PathVariable Long commentId) {
     commentApplication.removeComment(userContextProvider.getUserId(), commentId);
     return ApiResponse.success(null);
   }
 
-  @PostMapping("/v1/feed/{feedId}/{commentId}/like-toggle")
+  @PostMapping("/{feedId}/{commentId}/like-toggle")
   public ApiResponse<String> likeComment(@PathVariable Long commentId, @AuthenticationPrincipal UserAuth userAuth) {
     commentApplication.toggleLike(userContextProvider.getUserId(), commentId);
     return ApiResponse.success(null);

@@ -31,7 +31,7 @@ public class FeedController {
 
     @GetMapping()
     public ApiResponse<List<FeedDto>> getFeeds(FeedSearchDto feedSearchDto) {
-        return ApiResponse.success(feedApplication.listFeeds(feedSearchDto));
+        return ApiResponse.success(feedApplication.listFeeds(userContextProvider.getUserId(), feedSearchDto));
     }
 
     @GetMapping("/{feedId}")

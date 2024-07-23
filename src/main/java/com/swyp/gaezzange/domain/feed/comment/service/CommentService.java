@@ -7,15 +7,18 @@ import com.swyp.gaezzange.exception.customException.BizException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class CommentService {
 
   private final CommentRepository commentRepository;
 
+  @Transactional
   public void registerComment(long userId, Long feedId, CommentForm commentForm) {
-    Comment parentComment = getOptionalComment(Long.valueOf(commentForm.getCommentParentId()))
+    Comment parentComment = getOptionalComment(commentForm.getCommentParentId())
         .orElse(null);
     Comment comment = Comment.builder()
         .userId(userId)

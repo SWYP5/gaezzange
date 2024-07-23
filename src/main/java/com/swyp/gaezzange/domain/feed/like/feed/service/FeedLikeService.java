@@ -5,7 +5,6 @@ import com.swyp.gaezzange.domain.feed.like.feed.repository.FeedLikeRepository;
 import com.swyp.gaezzange.domain.feed.like.service.AbstractLikeService;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +16,7 @@ public class FeedLikeService extends AbstractLikeService<FeedLike> {
 
   @Override
   protected Optional<FeedLike> findLike(Long feedId, Long userId) {
-    return feedLikeRepository.findByFeedIdAndUserId(feedId, userId);
+    return feedLikeRepository.findByFeedIdAndUserIdAndDeletedIsFalse(feedId, userId);
   }
 
   @Override
@@ -34,7 +33,11 @@ public class FeedLikeService extends AbstractLikeService<FeedLike> {
   }
 
   public long countByFeedId(Long feedId) {
-    return feedLikeRepository.countByFeedId(feedId);
+    return feedLikeRepository.countByFeedIdAndDeletedIsFalse(feedId);
+  }
+
+  public boolean existsLike(Long feedId, Long userId) {
+    return feedLikeRepository.findOneByFeedIdAndUserIdAndDeletedIsFalse(feedId, userId).isPresent();
   }
 
   @Override

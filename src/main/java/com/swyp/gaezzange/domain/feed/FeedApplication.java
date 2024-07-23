@@ -22,6 +22,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,7 +40,10 @@ public class FeedApplication {
   private final FeedImageService feedImageService;
   private final FileStorage fileStorage;
 
-  public List<FeedDto> listFeeds(FeedSearchDto feedSearchDto) {
+  @Value("${cloud.aws.s3.url}")
+  private String s3Url;
+
+  public List<FeedDto> listFeeds(long userId, FeedSearchDto feedSearchDto) {
     List<Feed> feeds = feedService.getAllFeed(feedSearchDto);
     List<User> users = userService.findAllByUserIds(
         feeds.stream().map(Feed::getUserId).collect(Collectors.toList()));
@@ -60,13 +64,16 @@ public class FeedApplication {
           FeedImage feedImage = feedImageMap.get(feed.getFeedId());
 
           return new FeedDto(
-              feed.getUserId().toString(),
+              feed.getUserId(),
+              feed.getFeedId(),
               user.getNickname(),
               feed.getTendency(),
               feed.getCategory(),
-              user.getProfileImagePath(),
+              user.getProfileImagePath() != null ? s3Url+user.getProfileImagePath() : null,
               feed.getContent(),
-              feedImage != null ? feedImage.getFeedImagePath() : null,
+              feedImage != null ? s3Url+feedImage.getFeedImagePath() : null,
+              feed.getCreatedAt(),
+              feedLikeService.existsLike(feed.getFeedId(), userId),
               feedLikeService.countByFeedId(feed.getFeedId()),
               commentService.commentCountByFeedId(feed.getFeedId())
           );
@@ -85,7 +92,7 @@ public class FeedApplication {
     return FeedDetailDto.builder()
         .nickname(user.getNickname())
         .feedContent(feed.getContent())
-        .feedImagePath(user.getProfileImagePath())
+        .feedImagePath(s3Url+user.getProfileImagePath())
         .likeCount(feedLikeCount)
         .commentCount(commentCount)
         .build();
@@ -170,6 +177,7 @@ public class FeedApplication {
     }
   }
 
+  @Transactional
   public void toggleLike(long userId, Long feedId) {
     feedLikeService.toggleLike(userId, feedId);
   }

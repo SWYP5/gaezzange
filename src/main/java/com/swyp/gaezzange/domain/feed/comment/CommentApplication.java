@@ -26,6 +26,7 @@ public class CommentApplication {
     return null;
   }
 
+  @Transactional
   public void addComment(long userId, Long feedId, CommentForm commentForm) {
     commentService.registerComment(userId, feedId, commentForm);
   }
