@@ -27,6 +27,14 @@ public class CommentLikeService extends AbstractLikeService<CommentLike> {
         .build();
   }
 
+  public long countByCommentId(Long commentId) {
+    return commentLikeRepository.countByCommentIdAndDeletedIsFalse(commentId);
+  }
+
+  public boolean existsLike(Long commentId, Long userId) {
+    return commentLikeRepository.findOneByCommentIdAndUserIdAndDeletedIsFalse(commentId, userId).isPresent();
+  }
+
   @Override
   protected void saveLike(CommentLike like) {
     commentLikeRepository.save(like);

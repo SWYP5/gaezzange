@@ -1,11 +1,13 @@
 package com.swyp.gaezzange.api.feed;
 
+import com.swyp.gaezzange.api.feed.dto.comment.CommentDto;
 import com.swyp.gaezzange.api.feed.dto.comment.CommentForm;
 import com.swyp.gaezzange.authentication.UserContextProvider;
 import com.swyp.gaezzange.domain.feed.comment.CommentApplication;
 import com.swyp.gaezzange.domain.user.auth.repository.UserAuth;
 import com.swyp.gaezzange.util.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,9 +29,9 @@ public class CommentController {
   private final CommentApplication commentApplication;
 
 
-  @GetMapping("/{feedId}/{commentId}")
-  public ApiResponse<String> getComment(@PathVariable Long commentId) {
-    return ApiResponse.success(commentApplication.getComment(commentId));
+  @GetMapping("/{feedId}/comments")
+  public ApiResponse<List<CommentDto>> getComments(@PathVariable Long feedId) {
+    return ApiResponse.success(commentApplication.getComments(userContextProvider.getUserId(), feedId));
   }
 
   @PostMapping("/{feedId}/comment")
@@ -51,7 +53,7 @@ public class CommentController {
   }
 
   @PostMapping("/{feedId}/{commentId}/like-toggle")
-  public ApiResponse<String> likeComment(@PathVariable Long commentId, @AuthenticationPrincipal UserAuth userAuth) {
+  public ApiResponse<String> likeComment(@PathVariable Long commentId) {
     commentApplication.toggleLike(userContextProvider.getUserId(), commentId);
     return ApiResponse.success(null);
   }

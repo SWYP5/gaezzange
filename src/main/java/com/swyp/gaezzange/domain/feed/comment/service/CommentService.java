@@ -4,6 +4,7 @@ import com.swyp.gaezzange.api.feed.dto.comment.CommentForm;
 import com.swyp.gaezzange.domain.feed.comment.repository.Comment;
 import com.swyp.gaezzange.domain.feed.comment.repository.CommentRepository;
 import com.swyp.gaezzange.exception.customException.BizException;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -65,7 +66,7 @@ public class CommentService {
     }
   }
 
-  public Optional<Comment> getComment(Long commentId) {
-    return commentRepository.findById(commentId);
+  public List<Comment> getComments(Long feedId) {
+    return commentRepository.findAllByFeedIdAndDeletedIsFalse(feedId);
   }
 }
