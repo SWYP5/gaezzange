@@ -64,7 +64,7 @@ public class JWTUtil {
 
   public boolean isPastWeekToken(String token) {
     LocalDateTime expiration = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody()
-        .getExpiration().toInstant()
+        .getIssuedAt().toInstant()
         .atZone(ZoneId.systemDefault())
         .toLocalDateTime();
     return expiration.isBefore(getStartOfWeek().atStartOfDay());

@@ -98,6 +98,11 @@ public class JWTFilter extends OncePerRequestFilter {
             token -> response.setHeader("Authorization", "Bearer " + token.getToken()),
             () -> response.setStatus(HttpServletResponse.SC_UNAUTHORIZED)
         );
+
+    if (optionalAuthToken.isPresent()) {
+      AuthToken authToken = optionalAuthToken.get();
+      setSecurityContextByToken(authToken.getToken());
+    }
   }
 
   private String refreshAccessToken(String accessToken, HttpServletResponse response) {
