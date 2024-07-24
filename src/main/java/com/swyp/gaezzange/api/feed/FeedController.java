@@ -41,11 +41,10 @@ public class FeedController {
 
     @PostMapping()
     public ApiResponse<FeedDetailDto> addFeed(
-        @RequestPart("feedForm") FeedForm feedForm,
-        @RequestPart(value = "feedImage", required = false) MultipartFile feedImageFile
+        @RequestPart("feedForm") FeedForm feedForm
     )
     {
-        feedApplication.addFeed(userContextProvider.getUserId(), feedForm, feedImageFile);;
+        feedApplication.addFeed(userContextProvider.getUserId(), feedForm);;
         return ApiResponse.success(null);
     }
 
@@ -56,7 +55,7 @@ public class FeedController {
         @RequestPart(value = "feedImage", required = false) MultipartFile feedImageFile
     )
     {
-        feedApplication.updateFeed(userContextProvider.getUserId(), feedId, feedForm, feedImageFile);
+        feedApplication.updateFeed(userContextProvider.getUserId(), feedId, feedForm);
         return ApiResponse.success(null);
     }
 

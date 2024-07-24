@@ -49,9 +49,8 @@ public class FeedService {
   }
 
   @Transactional
-  public Feed updateFeed(Feed feed, FeedForm feedForm) {
+  public void updateFeed(Feed feed, FeedForm feedForm) {
     feed.updateFeed(feedForm.getTendency(), feedForm.getCategory(), feedForm.getContent());
-    return feedRepository.save(feed);
   }
 
   @Transactional

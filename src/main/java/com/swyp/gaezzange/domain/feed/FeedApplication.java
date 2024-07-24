@@ -1,8 +1,12 @@
 package com.swyp.gaezzange.domain.feed;
 
+import static com.swyp.gaezzange.contants.ExceptionConstants.S3ExceptionConstants.CODE_FAILED_FILE_DELETE;
+import static com.swyp.gaezzange.contants.ExceptionConstants.S3ExceptionConstants.MESSAGE_FAILED_FILE_DELETE;
 import static com.swyp.gaezzange.contants.ExceptionConstants.UserExceptionConstants.CODE_USER_NOT_FOUND;
 import static com.swyp.gaezzange.contants.ExceptionConstants.UserExceptionConstants.MESSAGE_USER_NOT_FOUND;
 import static com.swyp.gaezzange.contants.SystemConstants.S3Constants.S3_URL;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import com.swyp.gaezzange.api.feed.dto.feed.FeedDetailDto;
 import com.swyp.gaezzange.api.feed.dto.feed.FeedDto;
@@ -17,9 +21,7 @@ import com.swyp.gaezzange.domain.feed.service.FeedService;
 import com.swyp.gaezzange.domain.user.repository.User;
 import com.swyp.gaezzange.domain.user.service.UserService;
 import com.swyp.gaezzange.exception.customException.BizException;
-import com.swyp.gaezzange.exception.customException.InvalidFileException;
 import com.swyp.gaezzange.util.S3.FileStorage;
-import com.swyp.gaezzange.util.S3.FileType;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -28,7 +30,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 @Component
 @Slf4j
@@ -99,60 +100,35 @@ public class FeedApplication {
   }
 
   @Transactional
-  public void addFeed(long userId, FeedForm feedForm, MultipartFile feedImageFile) {
+  public void addFeed(long userId, FeedForm feedForm) {
     Feed savedFeed = feedService.registerFeed(userId, feedForm);
-    if (feedImageFile != null) {
-      try {
-        String imagePath = fileStorage.upload(FileType.FEED_IMAGE, feedImageFile);
-        FeedImage feedImage = FeedImage.builder()
-            .feedId(savedFeed.getFeedId())
-            .feedImagePath(imagePath)
-            .deleted(false)
-            .build();
-        feedImageService.saveFeedImage(feedImage);
-      } catch (InvalidFileException e) {
-        throw new BizException("NOT_VALID_IMAGE", "이미지 파일만 업로드할 수 있습니다.");
-      } catch (Exception e) {
-        log.error("[FAILED_TO_REGISTER_FEED] userId: {}", userId, e);
-        throw new BizException("FAILED_TO_REGISTER_FEED", e.getMessage());
-      }
-    }
+    FeedImage feedImage = FeedImage.builder()
+        .feedId(savedFeed.getFeedId())
+        .feedImagePath(feedForm.getFeedImagePath())
+        .deleted(false)
+        .build();
+    feedImageService.saveFeedImage(feedImage);
   }
 
   @Transactional
-  public void updateFeed(long userId, Long feedId, FeedForm feedForm, MultipartFile feedImageFile) {
+  public void updateFeed(long userId, Long feedId, FeedForm feedForm) {
     Feed feed = feedService.getFeed(feedId);
 
     if (!feed.validateUserId(userId)) {
       throw new BizException("PERMISSION_DENIED", "권한이 없습니다.");
     }
 
-    Feed updateFeed = feedService.updateFeed(feed, feedForm);
-    FeedImage feedImage = feedImageService.getFeedImageById(feedId)
-        .orElse(null);
+    feedService.updateFeed(feed, feedForm);
+    Optional<FeedImage> feedImage = feedImageService.getFeedImageById(feedId);
 
-    if (feedImageFile != null && !feedImageFile.isEmpty()) {
-      try {
-        if (feedImage != null) {
-          // 기존 이미지를 업데이트
-          String newImagePath = fileStorage.updateFile(FileType.FEED_IMAGE,
-              feedImage.getFeedImagePath(), feedImageFile);
-          feedImage.updateFeedImagePath(newImagePath);
-        } else {
-          // 새 이미지를 삽입
-          String newImagePath = fileStorage.upload(FileType.FEED_IMAGE, feedImageFile);
-          feedImage = FeedImage.builder()
-              .feedId(feedId)
-              .feedImagePath(newImagePath)
-              .deleted(false)
-              .build();
-        }
-        feedImageService.saveFeedImage(feedImage);
-      } catch (InvalidFileException e) {
-        throw new InvalidFileException("이미지 파일만 업로드할 수 있습니다.");
-      } catch (Exception e) {
-        throw new BizException("FILE_UPDATE_FAILED", "파일 업데이트에 실패했습니다.");
-      }
+    String imagePath = feedForm.getFeedImagePath();
+    if (isBlank(imagePath)) {
+      feedImage.ifPresent(image -> removeFeedImageIfExist(image));
+    } else {
+      feedImage.ifPresentOrElse(
+          image -> updateFeedImage(image, imagePath.replace(S3_URL, EMPTY)),
+          () -> saveFeedImage(feedForm, feedId)
+      );
     }
   }
 
@@ -166,15 +142,42 @@ public class FeedApplication {
       throw new BizException("PERMISSION_DENIED", "권한이 없습니다.");
     }
 
+    feedImage.ifPresent(image -> removeFeedImageIfExist(image));
     feedService.deleteFeed(feed);
+  }
 
-    if (feedImage.isPresent()) {
-      try {
-        fileStorage.deleteFile(feedImage.get().getFeedImagePath());
-      } catch (Exception e) {
-        throw new BizException("FILE_DELETE_FAILED", "파일 삭제에 실패했습니다.");
+  private void removeFeedImageIfExist(FeedImage feedImage) {
+    try {
+      if (fileStorage.checkFileExists(feedImage.getFeedImagePath())) {
+        fileStorage.deleteFile(feedImage.getFeedImagePath());
+        feedImage.setDeleted(true);
       }
+    } catch (Exception e) {
+      throw new BizException(CODE_FAILED_FILE_DELETE, MESSAGE_FAILED_FILE_DELETE);
     }
+  }
+
+
+  private void updateFeedImage(FeedImage feedImage, String newFeedImagePath) {
+    if (newFeedImagePath.equals(feedImage.getFeedImagePath())) {
+      return;
+    }
+
+    if (!feedImage.isDeleted()) {
+      removeFeedImageIfExist(feedImage);
+    }
+    feedImage.updateFeedImagePath(newFeedImagePath);
+    feedImage.setDeleted(false);
+  }
+
+  private void saveFeedImage(FeedForm feedForm, long feedId) {
+    feedImageService.saveFeedImage(
+        FeedImage.builder()
+            .feedId(feedId)
+            .feedImagePath(feedForm.getFeedImagePath())
+            .deleted(false)
+            .build()
+    );
   }
 
   @Transactional

@@ -1,5 +1,7 @@
 package com.swyp.gaezzange.domain.user.repository;
 
+import static com.swyp.gaezzange.contants.SystemConstants.S3Constants.S3_URL;
+import static org.apache.logging.log4j.util.Strings.EMPTY;
 import static org.apache.logging.log4j.util.Strings.isBlank;
 
 import com.swyp.gaezzange.api.user.dto.UserInfoForm;
@@ -62,9 +64,11 @@ public class User extends BaseTimeEntity {
   }
 
   public User updateProfile(UserProfileForm form) {
+    String profileImagePath = isBlank(form.getProfileImagePath()) ? this.profileImagePath : form.getProfileImagePath();
+
     return User.builder()
         .nickname(isBlank(form.getNickname()) ? this.nickname : form.getNickname())
-        .profileImagePath(isBlank(form.getProfileImagePath()) ? this.profileImagePath : form.getProfileImagePath())
+        .profileImagePath(profileImagePath.replace(S3_URL, EMPTY))
         .build();
   }
 }
