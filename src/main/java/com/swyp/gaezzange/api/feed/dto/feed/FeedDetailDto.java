@@ -1,6 +1,7 @@
 package com.swyp.gaezzange.api.feed.dto.feed;
 
 import com.swyp.gaezzange.api.feed.dto.comment.CommentForm;
+import com.swyp.gaezzange.domain.category.FeedCategory;
 import com.swyp.gaezzange.domain.tendency.Tendency;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,6 +24,7 @@ public class FeedDetailDto {
     private Long commentCount;
     private List<CommentForm> commentForm;
     private Tendency feedTendency;
+    private FeedCategory category;
     private Boolean isLike;
     private LocalDateTime createdAt;
 }

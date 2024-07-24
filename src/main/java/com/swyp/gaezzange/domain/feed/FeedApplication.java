@@ -98,6 +98,7 @@ public class FeedApplication {
         .likeCount(feedLikeCount)
         .commentCount(commentCount)
         .feedTendency(feed.getTendency())
+        .category(feed.getCategory())
         .createdAt(feed.getCreatedAt())
         .isLike(isLike)
         .build();
