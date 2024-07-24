@@ -1,5 +1,7 @@
 package com.swyp.gaezzange.domain.feed;
 
+import static com.swyp.gaezzange.api.contants.SystemConstants.S3Constants.S3_URL;
+
 import com.swyp.gaezzange.api.feed.dto.feed.FeedDetailDto;
 import com.swyp.gaezzange.api.feed.dto.feed.FeedDto;
 import com.swyp.gaezzange.api.feed.dto.feed.FeedForm;
@@ -22,7 +24,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,9 +40,6 @@ public class FeedApplication {
   private final CommentService commentService;
   private final FeedImageService feedImageService;
   private final FileStorage fileStorage;
-
-  @Value("${cloud.aws.s3.url}")
-  private String s3Url;
 
   public List<FeedDto> listFeeds(long userId, FeedSearchDto feedSearchDto) {
     List<Feed> feeds = feedService.getAllFeed(feedSearchDto);
@@ -69,9 +67,9 @@ public class FeedApplication {
               user.getNickname(),
               feed.getTendency(),
               feed.getCategory(),
-              user.getProfileImagePath() != null ? s3Url+user.getProfileImagePath() : null,
+              user.getProfileImagePath() != null ? S3_URL + user.getProfileImagePath() : null,
               feed.getContent(),
-              feedImage != null ? s3Url+feedImage.getFeedImagePath() : null,
+              feedImage != null ? S3_URL + feedImage.getFeedImagePath() : null,
               feed.getCreatedAt(),
               feedLikeService.existsLike(feed.getFeedId(), userId),
               feedLikeService.countByFeedId(feed.getFeedId()),
@@ -92,7 +90,7 @@ public class FeedApplication {
     return FeedDetailDto.builder()
         .nickname(user.getNickname())
         .feedContent(feed.getContent())
-        .feedImagePath(s3Url+user.getProfileImagePath())
+        .feedImagePath(S3_URL + user.getProfileImagePath())
         .likeCount(feedLikeCount)
         .commentCount(commentCount)
         .build();
