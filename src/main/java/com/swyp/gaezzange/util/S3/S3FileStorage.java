@@ -47,7 +47,7 @@ public class S3FileStorage implements FileStorage {
         .build();
 
     s3Client.putObject(putObjectRequest, RequestBody.fromByteBuffer(ByteBuffer.wrap(file.getBytes())));
-    return key;
+    return "/" + key;
   }
 
   @Override

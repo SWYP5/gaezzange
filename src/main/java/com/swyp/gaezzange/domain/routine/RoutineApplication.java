@@ -1,5 +1,8 @@
 package com.swyp.gaezzange.domain.routine;
 
+import static com.swyp.gaezzange.contants.ExceptionConstants.RoutineExceptionConstants.CODE_NOT_OWNED_ROUTINE;
+import static com.swyp.gaezzange.contants.ExceptionConstants.RoutineExceptionConstants.MESSAGE_NOT_OWNED_ROUTINE;
+
 import com.swyp.gaezzange.api.routine.dto.RoutineDto;
 import com.swyp.gaezzange.api.routine.dto.RoutineForm;
 import com.swyp.gaezzange.api.routine.execution.dto.RoutineExecutionResultDto;
@@ -168,7 +171,7 @@ public class RoutineApplication {
 
   private void validateOwnedRoutine(User user, Routine routine) {
     if (!user.getUserId().equals(routine.getUserId())) {
-      throw new BizException("NOT_OWNED_ROUTINE", "본인의 루틴이 아닙니다.");
+      throw new BizException(CODE_NOT_OWNED_ROUTINE, MESSAGE_NOT_OWNED_ROUTINE);
     }
   }
 

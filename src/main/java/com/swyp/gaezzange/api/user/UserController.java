@@ -1,5 +1,8 @@
 package com.swyp.gaezzange.api.user;
 
+import static com.swyp.gaezzange.contants.ExceptionConstants.UserExceptionConstants.CODE_ALREADY_ONBOARDED;
+import static com.swyp.gaezzange.contants.ExceptionConstants.UserExceptionConstants.MESSAGE_ALREADY_ONBOARDED;
+
 import com.swyp.gaezzange.api.user.dto.UserBasicInfoDto;
 import com.swyp.gaezzange.api.user.dto.UserInfoForm;
 import com.swyp.gaezzange.api.user.dto.UserProfileForm;
@@ -39,7 +42,7 @@ public class UserController {
   public ApiResponse onboard(@Valid @RequestBody UserInfoForm form) {
     UserAuth userAuth = userContextProvider.getUserAuth();
     if (userAuth.getUser() != null) {
-      throw new BizException("ALREADY_ONBOARDED", "이미 온보딩을 완료했습니다.");
+      throw new BizException(CODE_ALREADY_ONBOARDED, MESSAGE_ALREADY_ONBOARDED);
     }
 
     userApplication.onboard(userAuth, form);

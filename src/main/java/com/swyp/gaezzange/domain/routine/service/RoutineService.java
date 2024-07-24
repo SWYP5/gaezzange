@@ -1,5 +1,8 @@
 package com.swyp.gaezzange.domain.routine.service;
 
+import static com.swyp.gaezzange.contants.ExceptionConstants.RoutineExceptionConstants.CODE_ROUTINE_NOT_FOUND;
+import static com.swyp.gaezzange.contants.ExceptionConstants.RoutineExceptionConstants.MESSAGE_ROUTINE_NOT_FOUND;
+
 import com.swyp.gaezzange.domain.routine.repository.Routine;
 import com.swyp.gaezzange.domain.routine.repository.RoutineRepository;
 import com.swyp.gaezzange.exception.customException.BizException;
@@ -29,6 +32,6 @@ public class RoutineService {
 
   public Routine findRoutineById(Long id) {
     return repository.findById(id)
-        .orElseThrow(() -> new BizException("NOT_FOUND_ROUTINE", "루틴을 찾을 수 없습니다."));
+        .orElseThrow(() -> new BizException(CODE_ROUTINE_NOT_FOUND, MESSAGE_ROUTINE_NOT_FOUND));
   }
 }

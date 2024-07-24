@@ -1,9 +1,13 @@
 package com.swyp.gaezzange.domain.feed.service;
 
+import static com.swyp.gaezzange.contants.ExceptionConstants.FeedExceptionConstants.CODE_FEED_NOT_FOUND;
+import static com.swyp.gaezzange.contants.ExceptionConstants.FeedExceptionConstants.MESSAGE_FEED_NOT_FOUND;
+
 import com.swyp.gaezzange.api.feed.dto.feed.FeedForm;
 import com.swyp.gaezzange.api.feed.dto.feed.FeedSearchDto;
 import com.swyp.gaezzange.domain.feed.repository.Feed;
 import com.swyp.gaezzange.domain.feed.repository.FeedRepository;
+import com.swyp.gaezzange.exception.customException.BizException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +36,8 @@ public class FeedService {
 
   public Feed getFeed(long feedId) {
     return feedRepository.findById(feedId)
-        .orElseThrow(() -> new RuntimeException("not found feed"));
+        .orElseThrow(() -> new BizException(CODE_FEED_NOT_FOUND, MESSAGE_FEED_NOT_FOUND));
+
   }
 
   public List<Feed> getAllFeed(FeedSearchDto feedSearchDto) {

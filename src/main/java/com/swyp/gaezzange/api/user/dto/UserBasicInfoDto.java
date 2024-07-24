@@ -1,6 +1,6 @@
 package com.swyp.gaezzange.api.user.dto;
 
-import static com.swyp.gaezzange.api.contants.SystemConstants.S3Constants.S3_URL;
+import static com.swyp.gaezzange.contants.SystemConstants.S3Constants.S3_URL;
 
 import com.swyp.gaezzange.domain.tendency.Tendency;
 import com.swyp.gaezzange.domain.user.repository.User;

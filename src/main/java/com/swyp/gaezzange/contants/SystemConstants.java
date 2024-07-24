@@ -1,4 +1,4 @@
-package com.swyp.gaezzange.api.contants;
+package com.swyp.gaezzange.contants;
 
 public abstract class SystemConstants {
 

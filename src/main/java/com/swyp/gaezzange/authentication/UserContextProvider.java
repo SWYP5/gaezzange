@@ -1,5 +1,10 @@
 package com.swyp.gaezzange.authentication;
 
+import static com.swyp.gaezzange.contants.ExceptionConstants.UserExceptionConstants.CODE_UNKNOWN_USER;
+import static com.swyp.gaezzange.contants.ExceptionConstants.UserExceptionConstants.CODE_USER_NOT_FOUND;
+import static com.swyp.gaezzange.contants.ExceptionConstants.UserExceptionConstants.MESSAGE_UNKNOWN_USER;
+import static com.swyp.gaezzange.contants.ExceptionConstants.UserExceptionConstants.MESSAGE_USER_NOT_FOUND;
+
 import com.swyp.gaezzange.domain.user.auth.repository.UserAuth;
 import com.swyp.gaezzange.domain.user.auth.service.UserAuthService;
 import com.swyp.gaezzange.domain.user.repository.User;
@@ -24,18 +29,18 @@ public class UserContextProvider {
 
   public UserAuth getUserAuth() {
     return userAuthService.getById(getContext().getUserAuthId())
-        .orElseThrow(() -> new BizException("UNKNOWN_USER", "다시 로그인 해주세요."));
+        .orElseThrow(() -> new BizException(CODE_UNKNOWN_USER, MESSAGE_UNKNOWN_USER));
   }
 
   public User getUser() {
     return userAuthService.getById(getContext().getUserAuthId())
         .map(UserAuth::getUser)
-        .orElseThrow(() -> new BizException("USER_NOT_FOUND", "유저 정보가 없습니다."));
+        .orElseThrow(() -> new BizException(CODE_USER_NOT_FOUND, MESSAGE_USER_NOT_FOUND));
   }
 
   public long getUserId() {
     return Optional.ofNullable(getContext().getUserId())
-        .orElseThrow(() -> new BizException("USER_NOT_FOUND", "유저 정보가 없습니다."));
+        .orElseThrow(() -> new BizException(CODE_USER_NOT_FOUND, MESSAGE_USER_NOT_FOUND));
   }
 
   public Optional<Long> getUserIdOptional() {

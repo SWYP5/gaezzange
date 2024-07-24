@@ -1,6 +1,8 @@
 package com.swyp.gaezzange.domain.feed;
 
-import static com.swyp.gaezzange.api.contants.SystemConstants.S3Constants.S3_URL;
+import static com.swyp.gaezzange.contants.ExceptionConstants.UserExceptionConstants.CODE_USER_NOT_FOUND;
+import static com.swyp.gaezzange.contants.ExceptionConstants.UserExceptionConstants.MESSAGE_USER_NOT_FOUND;
+import static com.swyp.gaezzange.contants.SystemConstants.S3Constants.S3_URL;
 
 import com.swyp.gaezzange.api.feed.dto.feed.FeedDetailDto;
 import com.swyp.gaezzange.api.feed.dto.feed.FeedDto;
@@ -82,7 +84,7 @@ public class FeedApplication {
   public FeedDetailDto getFeed(Long feedId) {
     Feed feed = feedService.getFeed(feedId);
     User user = userService.getById(feed.getUserId())
-        .orElseThrow(() -> new RuntimeException("not found user"));
+        .orElseThrow(() -> new BizException(CODE_USER_NOT_FOUND, MESSAGE_USER_NOT_FOUND));
 
     long commentCount = commentService.commentCountByFeedId(feedId);
     long feedLikeCount = feedLikeService.countByFeedId(feedId);
