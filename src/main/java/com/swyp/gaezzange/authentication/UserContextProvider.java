@@ -37,4 +37,8 @@ public class UserContextProvider {
     return Optional.ofNullable(getContext().getUserId())
         .orElseThrow(() -> new BizException("USER_NOT_FOUND", "유저 정보가 없습니다."));
   }
+
+  public Optional<Long> getUserIdOptional() {
+    return Optional.ofNullable(getContext().getUserId());
+  }
 }

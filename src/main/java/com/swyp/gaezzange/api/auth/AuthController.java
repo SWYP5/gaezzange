@@ -23,11 +23,10 @@ public class AuthController {
     @GetMapping("/token")
     public ApiResponse getToken() {
 
-        try {
-            userApplication.syncUserTendency(userContextProvider.getUserId());
-        } catch (Exception e) {
-            log.info(e.getMessage(), e);
-        }
+        // 로그인 시 업데이트
+        userContextProvider.getUserIdOptional()
+            .ifPresent(userId -> userApplication.syncUserTendency(userId));
+
         return ApiResponse.success(null);
     }
 }

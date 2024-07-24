@@ -7,7 +7,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -45,18 +44,11 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal();
         String accessToken = createJwtToken("access" ,authentication, customUserDetails);
-        String refreshToken = createJwtToken("refresh" ,authentication, customUserDetails);
-
-        response.addCookie(createCookie("refreshToken", refreshToken, (int) (refreshTokenExpirationTime / 1000)));
-        response.setHeader(AUTHORIZATION_HEADER, BEARER_PREFIX + accessToken);
-
-        HttpSession session = request.getSession();
-        session.setAttribute("accessToken", accessToken);
 
         AuthToken authToken = AuthToken.builder()
                 .userAuthId(customUserDetails.getUserAuthId())
                 .expiresAt(LocalDateTime.now().plusSeconds(accessTokenProvideExpirationTime))
-                .token(refreshToken)
+                .token(accessToken)
                 .build();
 
         AuthToken savedAuthToken = authTokenRepository.save(authToken);
