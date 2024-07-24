@@ -90,7 +90,7 @@ public class Routine extends BaseTimeEntity {
     emoji = form.getEmoji();
     description = form.getDescription();
     startedDate = form.getStartedDate();
-    endedDate = form.getEndedDate();
+    endedDate = form.getEndedDate() == null ? LocalDate.MAX : form.getEndedDate();
     executionTime = form.getExecutionTime();
     daysOfWeek = form.getDaysOfWeek();
   }
