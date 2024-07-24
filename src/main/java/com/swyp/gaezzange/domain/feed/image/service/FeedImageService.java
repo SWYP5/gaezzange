@@ -18,11 +18,7 @@ public class FeedImageService {
   }
 
   public Optional<FeedImage> getFeedImageById(Long feedId) {
-    return feedImageRepository.findByFeedIdAndDeletedFalse(feedId);
-  }
-
-  public void deleteFeedImage(Long feedId) {
-    feedImageRepository.deleteById(feedId);
+    return feedImageRepository.findByFeedId(feedId);
   }
 
   public List<FeedImage> findAllByFeedIds(List<Long> feedIds) {

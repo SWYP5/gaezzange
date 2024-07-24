@@ -8,8 +8,9 @@ import org.springframework.data.repository.query.Param;
 
 public interface FeedImageRepository extends JpaRepository<FeedImage, Long> {
 
-  Optional<FeedImage> findByFeedIdAndDeletedFalse(long feedId);
+  Optional<FeedImage> findByFeedId(long feedId);
 
+  //TODO 삭제되지 않은 것만 조회
   @Query("SELECT fi FROM FeedImage fi WHERE fi.feedId IN :feedIds")
   List<FeedImage> findAllByFeedIds(@Param("feedIds")List<Long> feedIds);
 }

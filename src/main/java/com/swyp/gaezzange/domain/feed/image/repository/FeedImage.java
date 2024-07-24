@@ -1,11 +1,17 @@
 package com.swyp.gaezzange.domain.feed.image.repository;
 
 import com.swyp.gaezzange.util.jpa.BaseTimeEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Builder
 @Entity
@@ -27,14 +33,11 @@ public class FeedImage extends BaseTimeEntity {
     @Column(nullable = false)
     private String feedImagePath;
 
+    @Setter
     @Column(columnDefinition = "TINYINT(1)", nullable = false)
     private boolean deleted;
 
     public void updateFeedImagePath(String feedImagePath) {
         this.feedImagePath = feedImagePath;
-    }
-
-    public void deleteImage() {
-        this.deleted = true;
     }
 }

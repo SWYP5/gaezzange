@@ -15,5 +15,5 @@ public class FeedForm {
     private Tendency tendency;
     private FeedCategory category;
     private String content;
-//    private MultipartFile feedImage;
+    private String feedImagePath;
 }

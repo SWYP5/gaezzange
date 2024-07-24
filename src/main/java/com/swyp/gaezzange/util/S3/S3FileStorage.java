@@ -47,7 +47,7 @@ public class S3FileStorage implements FileStorage {
         .build();
 
     s3Client.putObject(putObjectRequest, RequestBody.fromByteBuffer(ByteBuffer.wrap(file.getBytes())));
-    return "/" + key;
+    return key;
   }
 
   @Override
@@ -65,23 +65,11 @@ public class S3FileStorage implements FileStorage {
   }
 
   @Override
-  public String updateFile(FileType fileType, String oldKey, MultipartFile file) throws IOException {
-    validateImageFile(file);
-    deleteFile(oldKey);
-    return upload(fileType, file);
-  }
-
-  @Override
   public void deleteFile(String key) {
     DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
         .bucket(bucketName)
         .key(key)
         .build();
     s3Client.deleteObject(deleteObjectRequest);
-  }
-
-  @Override
-  public boolean checkFileDeleted(String key) {
-    return !checkFileExists(key);
   }
 }

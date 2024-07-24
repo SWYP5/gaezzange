@@ -12,6 +12,11 @@ public abstract class ExceptionConstants {
     public static final String MESSAGE_UNKNOWN_USER = "다시 로그인 해주세요.";
   }
 
+  public static class S3ExceptionConstants {
+    public static final String CODE_FAILED_FILE_DELETE = "FILE_DELETE_FAILED";
+    public static final String MESSAGE_FAILED_FILE_DELETE = "파일 삭제에 실패했습니다.";
+  }
+
   public static class RoutineExceptionConstants {
 
     public static final String CODE_ROUTINE_NOT_FOUND = "ROUTINE_NOT_FOUND";
