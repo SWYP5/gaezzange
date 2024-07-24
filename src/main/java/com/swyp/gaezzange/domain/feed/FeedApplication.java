@@ -82,13 +82,14 @@ public class FeedApplication {
         .toList();
   }
 
-  public FeedDetailDto getFeed(Long feedId) {
+  public FeedDetailDto getFeed(Long feedId, Long userId) {
     Feed feed = feedService.getFeed(feedId);
     User user = userService.getById(feed.getUserId())
         .orElseThrow(() -> new BizException(CODE_USER_NOT_FOUND, MESSAGE_USER_NOT_FOUND));
 
     long commentCount = commentService.commentCountByFeedId(feedId);
     long feedLikeCount = feedLikeService.countByFeedId(feedId);
+    boolean isLike = feedLikeService.existsLike(feedId, userId);
 
     return FeedDetailDto.builder()
         .nickname(user.getNickname())
@@ -96,6 +97,9 @@ public class FeedApplication {
         .feedImagePath(S3_URL + user.getProfileImagePath())
         .likeCount(feedLikeCount)
         .commentCount(commentCount)
+        .feedTendency(feed.getTendency())
+        .createdAt(feed.getCreatedAt())
+        .isLike(isLike)
         .build();
   }
 

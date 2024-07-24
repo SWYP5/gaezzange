@@ -15,10 +15,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "FeedController", description = "Feed API")
 @RestController
@@ -36,13 +35,11 @@ public class FeedController {
 
     @GetMapping("/{feedId}")
     public ApiResponse<FeedDetailDto> getFeed(@PathVariable Long feedId) {
-        return ApiResponse.success(feedApplication.getFeed(feedId));
+        return ApiResponse.success(feedApplication.getFeed(feedId, userContextProvider.getUserId()));
     }
 
     @PostMapping()
-    public ApiResponse<FeedDetailDto> addFeed(
-        @RequestPart("feedForm") FeedForm feedForm
-    )
+    public ApiResponse<FeedDetailDto> addFeed(@RequestBody FeedForm feedForm)
     {
         feedApplication.addFeed(userContextProvider.getUserId(), feedForm);;
         return ApiResponse.success(null);
@@ -50,9 +47,7 @@ public class FeedController {
 
     @PutMapping("/{feedId}")
     public ApiResponse<FeedDetailDto> updateFeed(
-        @PathVariable Long feedId,
-        @RequestPart("feedForm") FeedForm feedForm,
-        @RequestPart(value = "feedImage", required = false) MultipartFile feedImageFile
+        @PathVariable Long feedId, @RequestBody FeedForm feedForm
     )
     {
         feedApplication.updateFeed(userContextProvider.getUserId(), feedId, feedForm);
