@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -39,7 +40,12 @@ public class RoutineController {
   ) {
     User user = contextProvider.getUser();
     //TODO cursor 또는 paging 처리 필요?
-    List<RoutineDto> routines = routineApplication.listRoutines(user, startDate, endDate);
+    List<RoutineDto> routines = routineApplication.listRoutines(user, startDate, endDate)
+        .stream()
+        .sorted(Comparator.comparing(RoutineDto::getName)
+            .thenComparing(RoutineDto::getExecutionTime)
+            .thenComparing(RoutineDto::getRoutineId))
+        .toList();
     return ApiResponse.success(routines);
   }
 

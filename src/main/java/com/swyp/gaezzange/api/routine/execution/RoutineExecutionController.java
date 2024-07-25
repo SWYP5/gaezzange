@@ -8,6 +8,7 @@ import com.swyp.gaezzange.domain.user.repository.User;
 import com.swyp.gaezzange.util.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,13 @@ public class RoutineExecutionController {
   public ApiResponse<List<RoutineExecutionResultDto>> listRoutineExecutions(
       @RequestParam LocalDate from, @RequestParam LocalDate to) {
     User user = userContextProvider.getUser();
-    return ApiResponse.success(routineApplication.listRoutineExecutions(user, from, to));
+    List<RoutineExecutionResultDto> routineExecutionResults =
+        routineApplication.listRoutineExecutions(user, from, to).stream()
+            .sorted(Comparator.comparing(RoutineExecutionResultDto::getRoutineName)
+                .thenComparing(RoutineExecutionResultDto::getRoutineExecutionTime)
+                .thenComparing(RoutineExecutionResultDto::getRoutineId))
+            .toList();
+    return ApiResponse.success(routineExecutionResults);
   }
 
   @GetMapping("/count")
