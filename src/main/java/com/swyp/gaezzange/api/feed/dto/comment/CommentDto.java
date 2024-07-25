@@ -1,10 +1,8 @@
 package com.swyp.gaezzange.api.feed.dto.comment;
 
-import com.swyp.gaezzange.api.routine.dto.RoutineDto;
 import com.swyp.gaezzange.domain.feed.comment.repository.Comment;
 import com.swyp.gaezzange.domain.user.repository.User;
 import java.time.LocalDateTime;
-import java.util.Optional;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -28,7 +26,7 @@ public class CommentDto {
         .commentCreatedAt(comment.getCreatedAt())
         .userId(comment.getUserId())
         .nickname(user.getNickname())
-        .profileImagePath(user.getProfileImagePath())
+        .profileImagePath(user.getProfileImagePathWithS3Url())
         .commentContent(comment.getContent())
         .commentLikeCount(commentLikeCount)
         .isCommentLike(isCommentLike)

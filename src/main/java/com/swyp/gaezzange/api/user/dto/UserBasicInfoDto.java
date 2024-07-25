@@ -1,7 +1,5 @@
 package com.swyp.gaezzange.api.user.dto;
 
-import static com.swyp.gaezzange.contants.SystemConstants.S3Constants.S3_URL;
-
 import com.swyp.gaezzange.domain.tendency.Tendency;
 import com.swyp.gaezzange.domain.user.repository.User;
 import lombok.AllArgsConstructor;
@@ -24,7 +22,7 @@ public class UserBasicInfoDto {
     return UserBasicInfoDto.builder()
         .userId(user.getUserId())
         .nickname(user.getNickname())
-        .profileImagePath(S3_URL + user.getProfileImagePath())
+        .profileImagePath(user.getProfileImagePathWithS3Url())
         .tendency(user.getTendency())
         .build();
   }

@@ -71,4 +71,8 @@ public class User extends BaseTimeEntity {
         .profileImagePath(profileImagePath.replace(S3_URL, EMPTY))
         .build();
   }
+
+  public String getProfileImagePathWithS3Url() {
+    return profileImagePath == null ? null : S3_URL + profileImagePath;
+  }
 }

@@ -71,9 +71,9 @@ public class FeedApplication {
               user.getNickname(),
               feed.getTendency(),
               feed.getCategory(),
-              user.getProfileImagePath() != null ? S3_URL + user.getProfileImagePath() : null,
+              user.getProfileImagePathWithS3Url(),
               feed.getContent(),
-              feedImage != null ? S3_URL + feedImage.getFeedImagePath() : null,
+              feedImage != null ? feedImage.getFeedImagePathWithS3Url() : null,
               feed.getCreatedAt(),
               feedLikeService.existsLike(feed.getFeedId(), userId),
               feedLikeService.countByFeedId(feed.getFeedId()),
@@ -91,14 +91,15 @@ public class FeedApplication {
 
     long commentCount = commentService.commentCountByFeedId(feedId);
     long feedLikeCount = feedLikeService.countByFeedId(feedId);
+    Optional<FeedImage> feedImage = feedImageService.getFeedImageById(feedId);
     boolean isLike = feedLikeService.existsLike(feedId, userId);
 
     return FeedDetailDto.builder()
         .userId(user.getUserId())
         .nickname(user.getNickname())
-        .profileImagePath(S3_URL + user.getProfileImagePath())
+        .profileImagePath(user.getProfileImagePathWithS3Url())
         .feedContent(feed.getContent())
-        .feedImagePath(S3_URL + user.getProfileImagePath())
+        .feedImagePath(feedImage.map(FeedImage::getFeedImagePathWithS3Url).orElse(null))
         .likeCount(feedLikeCount)
         .commentCount(commentCount)
         .feedTendency(feed.getTendency())
