@@ -39,14 +39,14 @@ public class FeedController {
     }
 
     @PostMapping()
-    public ApiResponse<FeedDetailDto> addFeed(@RequestBody FeedForm feedForm)
+    public ApiResponse addFeed(@RequestBody FeedForm feedForm)
     {
         feedApplication.addFeed(userContextProvider.getUserId(), feedForm);;
         return ApiResponse.success(null);
     }
 
     @PutMapping("/{feedId}")
-    public ApiResponse<FeedDetailDto> updateFeed(
+    public ApiResponse updateFeed(
         @PathVariable Long feedId, @RequestBody FeedForm feedForm
     )
     {
@@ -55,13 +55,13 @@ public class FeedController {
     }
 
     @DeleteMapping("/{feedId}")
-    public ApiResponse<FeedDetailDto> removeFeed(@PathVariable Long feedId) {
+    public ApiResponse removeFeed(@PathVariable Long feedId) {
         feedApplication.removeFeed(userContextProvider.getUserId(), feedId);
         return ApiResponse.success(null);
     }
 
     @PostMapping("/{feedId}/like-toggle")
-    public ApiResponse<String> likeFeed(@PathVariable Long feedId) {
+    public ApiResponse likeFeed(@PathVariable Long feedId) {
         feedApplication.toggleLike(userContextProvider.getUserId(), feedId);
         return ApiResponse.success(null);
     }

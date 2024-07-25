@@ -42,8 +42,7 @@ public class RoutineController {
     //TODO cursor 또는 paging 처리 필요?
     List<RoutineDto> routines = routineApplication.listRoutines(user, startDate, endDate)
         .stream()
-        .sorted(Comparator.comparing(RoutineDto::getName)
-            .thenComparing(RoutineDto::getExecutionTime)
+        .sorted(Comparator.comparing(RoutineDto::getExecutionTime)
             .thenComparing(RoutineDto::getRoutineId))
         .toList();
     return ApiResponse.success(routines);

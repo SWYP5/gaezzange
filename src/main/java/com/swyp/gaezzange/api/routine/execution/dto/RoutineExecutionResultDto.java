@@ -16,10 +16,6 @@ public class RoutineExecutionResultDto {
   private RoutineDto routine;
   private List<LocalDate> executionDates;
 
-  public String getRoutineName() {
-    return this.routine.getName();
-  }
-
   public LocalTime getRoutineExecutionTime() {
     return this.routine.getExecutionTime();
   }

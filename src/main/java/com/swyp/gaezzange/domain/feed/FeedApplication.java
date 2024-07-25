@@ -22,6 +22,7 @@ import com.swyp.gaezzange.domain.user.repository.User;
 import com.swyp.gaezzange.domain.user.service.UserService;
 import com.swyp.gaezzange.exception.customException.BizException;
 import com.swyp.gaezzange.util.S3.FileStorage;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -79,6 +80,7 @@ public class FeedApplication {
               commentService.commentCountByFeedId(feed.getFeedId())
           );
         })
+        .sorted(Comparator.comparing(FeedDto::getFeedCreatedAt).reversed())
         .toList();
   }
 
@@ -92,7 +94,9 @@ public class FeedApplication {
     boolean isLike = feedLikeService.existsLike(feedId, userId);
 
     return FeedDetailDto.builder()
+        .userId(user.getUserId())
         .nickname(user.getNickname())
+        .profileImagePath(S3_URL + user.getProfileImagePath())
         .feedContent(feed.getContent())
         .feedImagePath(S3_URL + user.getProfileImagePath())
         .likeCount(feedLikeCount)
@@ -107,12 +111,14 @@ public class FeedApplication {
   @Transactional
   public void addFeed(long userId, FeedForm feedForm) {
     Feed savedFeed = feedService.registerFeed(userId, feedForm);
-    FeedImage feedImage = FeedImage.builder()
-        .feedId(savedFeed.getFeedId())
-        .feedImagePath(feedForm.getFeedImagePath())
-        .deleted(false)
-        .build();
-    feedImageService.saveFeedImage(feedImage);
+    if(feedForm.getFeedImagePath() != null) {
+      FeedImage feedImage = FeedImage.builder()
+          .feedId(savedFeed.getFeedId())
+          .feedImagePath(feedForm.getFeedImagePath())
+          .deleted(false)
+          .build();
+      feedImageService.saveFeedImage(feedImage);
+    }
   }
 
   @Transactional

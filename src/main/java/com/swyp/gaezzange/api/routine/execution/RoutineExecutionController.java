@@ -35,8 +35,7 @@ public class RoutineExecutionController {
     User user = userContextProvider.getUser();
     List<RoutineExecutionResultDto> routineExecutionResults =
         routineApplication.listRoutineExecutions(user, from, to).stream()
-            .sorted(Comparator.comparing(RoutineExecutionResultDto::getRoutineName)
-                .thenComparing(RoutineExecutionResultDto::getRoutineExecutionTime)
+            .sorted(Comparator.comparing(RoutineExecutionResultDto::getRoutineExecutionTime)
                 .thenComparing(RoutineExecutionResultDto::getRoutineId))
             .toList();
     return ApiResponse.success(routineExecutionResults);
