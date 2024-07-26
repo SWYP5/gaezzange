@@ -61,11 +61,11 @@ public class RoutineApplication {
     validateOwnedRoutine(user, routine);
 
     if (form.getEndedDate() != routine.getEndedDate() || form.getStartedDate() != routine.getStartedDate()) {
-      List<RoutineExecution> executions = routineExecutionService.listRoutineExecution(routineId)
+      List<RoutineExecution> executionsToDelete = routineExecutionService.listRoutineExecution(routineId)
           .stream().filter(
               it -> it.getExecutedDate().isBefore(form.getStartedDate()) || it.getExecutedDate()
                   .isAfter(form.getEndedDate())).toList();
-      routineExecutionService.deleteRoutineExecutions(executions);
+      routineExecutionService.deleteRoutineExecutions(executionsToDelete);
     }
     routine.update(form);
   }
