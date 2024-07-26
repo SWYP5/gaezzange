@@ -53,8 +53,10 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 
         AuthToken savedAuthToken = authTokenRepository.save(authToken);
 
-        String referer = Optional.ofNullable(request.getHeader("Referer"))
+        String referer = Optional.ofNullable(request.getParameter("state"))
+            .map(state -> state.split("_")[0])
             .orElse("http://localhost:3000");
+
         if(!referer.endsWith("/")) {
             referer = referer + "/";
         }

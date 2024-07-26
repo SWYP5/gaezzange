@@ -2,6 +2,7 @@ package com.swyp.gaezzange.configuration;
 
 import com.swyp.gaezzange.authentication.CustomAuthenticationFailureHandler;
 import com.swyp.gaezzange.authentication.CustomAuthenticationSuccessHandler;
+import com.swyp.gaezzange.authentication.CustomAuthorizationRequestResolver;
 import com.swyp.gaezzange.authentication.CustomLogoutSuccessHandler;
 import com.swyp.gaezzange.authentication.OAuth2UserAuthProvider;
 import com.swyp.gaezzange.domain.user.UserApplication;
@@ -24,6 +25,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestResolver;
 import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -46,19 +49,22 @@ public class GaezzangeSecurityConfig {
   private final AuthTokenRepository authTokenRepository;
   private final UserAuthService userAuthService;
   private final UserApplication userApplication;
-
+  private final ClientRegistrationRepository clientRegistrationRepository;
 
   @Value("${jwt.secretKey}")
   private String secretKey;
 
+
   @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http, UserAuthRepository userAuthRepository) throws Exception {
+  public SecurityFilterChain filterChain(HttpSecurity http, UserAuthRepository userAuthRepository)
+      throws Exception {
     http
         .csrf(AbstractHttpConfigurer::disable)
         .cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource()))
         .exceptionHandling(httpSecurityExceptionHandlingConfigurer -> {
         })
-        .addFilterBefore(new JWTFilter(jwtUtil, authTokenRepository, userAuthService, userApplication),
+        .addFilterBefore(
+            new JWTFilter(jwtUtil, authTokenRepository, userAuthService, userApplication),
             OAuth2LoginAuthenticationFilter.class)
         .authorizeHttpRequests(registry ->
             registry.requestMatchers("/api/hello").permitAll()
@@ -70,6 +76,10 @@ public class GaezzangeSecurityConfig {
                 .anyRequest().authenticated()
         ).oauth2Login(oauth2Login ->
             oauth2Login
+                .authorizationEndpoint(authorizationEndpoint ->
+                    authorizationEndpoint
+                        .authorizationRequestResolver(customAuthorizationRequestResolver())
+                )
                 .userInfoEndpoint((userInfoEndpointConfig) ->
                     userInfoEndpointConfig.userService(oAuth2UserAuthProvider)
                 )
@@ -81,7 +91,7 @@ public class GaezzangeSecurityConfig {
             logout
                 .logoutSuccessUrl("/login")
                 .logoutSuccessHandler(logoutSuccessHandler)
-        ) .exceptionHandling(exceptionHandling ->
+        ).exceptionHandling(exceptionHandling ->
             exceptionHandling
                 .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
         );
@@ -97,12 +107,18 @@ public class GaezzangeSecurityConfig {
       config.addExposedHeader("RefreshToken");
       config.setAllowedMethods(Collections.singletonList("*"));
       config.setAllowedOriginPatterns(
-          List.of("http://localhost:3000", "https://gaejjange.swygbro.com", "http://localdev.com:3000"));
+          List.of("http://localhost:3000", "https://gaejjange.swygbro.com",
+              "http://localdev.com:3000"));
       config.setAllowCredentials(true);
 
       return config;
     };
 
+  }
+
+  @Bean
+  public OAuth2AuthorizationRequestResolver customAuthorizationRequestResolver() {
+    return new CustomAuthorizationRequestResolver(clientRegistrationRepository);
   }
 
   @Bean
