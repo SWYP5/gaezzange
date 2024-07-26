@@ -39,7 +39,7 @@ public class RoutineDto {
         .emoji(routine.getEmoji())
         .daysOfWeek(routine.getDaysOfWeek())
         .startedDate(routine.getStartedDate())
-        .endedDate(routine.getStartedDate())
+        .endedDate(routine.getEndedDate())
         .executionTime(routine.getExecutionTime())
         .build();
   }
