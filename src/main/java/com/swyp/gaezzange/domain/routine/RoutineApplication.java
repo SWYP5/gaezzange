@@ -140,8 +140,10 @@ public class RoutineApplication {
         routineExecutionService.getRoutineExecutionsByRoutine(user.getUserId(), from, to);
 
     log.info("executionsByRoutine {}", executionsByRoutine);
+    Set<DayOfWeek> dayOfWeekSet = DateUtil.getDaysOfWeekBetween(from, to);
 
     return executionsByRoutine.entrySet().stream()
+        .filter(it -> SetUtil.hasIntersection(it.getKey().getDaysOfWeek(), dayOfWeekSet))
         .map(entry ->
             new RoutineExecutionResultDto(
                 RoutineDto.from(entry.getKey()),
