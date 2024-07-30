@@ -18,6 +18,10 @@ public class UserService {
     return userRepository.findById(userId);
   }
 
+  public void deleteAll() {
+    userRepository.deleteAll();
+  }
+
   @Transactional
   public User saveUser(User user) {
     return userRepository.save(user);

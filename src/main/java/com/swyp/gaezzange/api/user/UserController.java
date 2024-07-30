@@ -31,6 +31,12 @@ public class UserController {
   private final UserApplication userApplication;
   private final UserContextProvider userContextProvider;
 
+  @GetMapping("/reset")
+  public ApiResponse<UserBasicInfoDto> reset() {
+    userApplication.reset();
+    return ApiResponse.success(null);
+  }
+
   @GetMapping("/my-info")
   public ApiResponse<UserBasicInfoDto> getUser() {
     User user = userContextProvider.getUser();
