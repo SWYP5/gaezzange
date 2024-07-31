@@ -36,7 +36,7 @@ public class AuthToken extends BaseTimeEntity {
   @Column(nullable = false)
   private Long userAuthId;
 
-  @Column(nullable = false)
+  @Column(nullable = false, columnDefinition = "TEXT")
   private String token;
 
   @Column(nullable = false)
