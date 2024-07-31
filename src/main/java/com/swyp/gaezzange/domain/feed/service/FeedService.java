@@ -55,6 +55,7 @@ public class FeedService {
 
   @Transactional
   public void deleteFeed(Feed feed) {
+    feed.deleteFeed();
     feedRepository.save(feed);
   }
 }
