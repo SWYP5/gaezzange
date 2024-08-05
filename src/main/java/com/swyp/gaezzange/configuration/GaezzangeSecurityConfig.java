@@ -54,6 +54,10 @@ public class GaezzangeSecurityConfig {
   @Value("${jwt.secretKey}")
   private String secretKey;
 
+  @Bean
+  public JWTFilter jwtFilter() {
+    return new JWTFilter(jwtUtil, authTokenRepository, userAuthService, userApplication);
+  }
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http, UserAuthRepository userAuthRepository)
@@ -63,18 +67,21 @@ public class GaezzangeSecurityConfig {
         .cors(corsConfigurer -> corsConfigurer.configurationSource(corsConfigurationSource()))
         .exceptionHandling(httpSecurityExceptionHandlingConfigurer -> {
         })
-        .addFilterBefore(
-            new JWTFilter(jwtUtil, authTokenRepository, userAuthService, userApplication),
-            OAuth2LoginAuthenticationFilter.class)
         .authorizeHttpRequests(registry ->
             registry.requestMatchers("/api/hello").permitAll()
+                .requestMatchers("/api/v1/user/reset").permitAll()
                 .requestMatchers("/oauth2/**").permitAll()
                 .requestMatchers("/api/v1/auth/**").permitAll()
                 .requestMatchers("/login/**").permitAll()
                 .requestMatchers("/swagger-ui/**").permitAll()
                 .requestMatchers("/v3/api-docs/**").permitAll()
                 .anyRequest().authenticated()
-        ).oauth2Login(oauth2Login ->
+        )
+        .addFilterBefore(
+            jwtFilter(),
+            OAuth2LoginAuthenticationFilter.class
+        )
+        .oauth2Login(oauth2Login ->
             oauth2Login
                 .authorizationEndpoint(authorizationEndpoint ->
                     authorizationEndpoint

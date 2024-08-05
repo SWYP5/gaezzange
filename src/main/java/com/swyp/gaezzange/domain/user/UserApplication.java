@@ -40,6 +40,12 @@ public class UserApplication {
     userService.saveUser(user.updateProfile((form)));
   }
 
+  @Transactional
+  public void reset() {
+    userService.deleteAll();
+    userAuthService.deleteAll();
+  }
+
   @Async
   @Transactional
   public void syncUserTendency(Long userId) {
