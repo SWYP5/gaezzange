@@ -91,7 +91,7 @@ public class FeedApplication {
 
     long commentCount = commentService.commentCountByFeedId(feedId);
     long feedLikeCount = feedLikeService.countByFeedId(feedId);
-    Optional<FeedImage> feedImage = feedImageService.getFeedImageById(feedId);
+    Optional<FeedImage> feedImage = feedImageService.getActiveFeedImageById(feedId);
     boolean isLike = feedLikeService.existsLike(feedId, userId);
 
     return FeedDetailDto.builder()
@@ -146,7 +146,7 @@ public class FeedApplication {
 
   @Transactional
   public void removeFeed(long userId, Long feedId) {
-    Optional<FeedImage> feedImage = feedImageService.getFeedImageById(feedId);
+    Optional<FeedImage> feedImage = feedImageService.getActiveFeedImageById(feedId);
 
     Feed feed = feedService.getFeed(feedId);
 

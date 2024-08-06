@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 public interface FeedImageRepository extends JpaRepository<FeedImage, Long> {
 
   Optional<FeedImage> findByFeedId(long feedId);
+  Optional<FeedImage> findByFeedIdAndDeletedFalse(long feedId);
 
   @Query("SELECT fi FROM FeedImage fi WHERE fi.feedId IN :feedIds AND fi.deleted = false")
   List<FeedImage> findAllByFeedIds(@Param("feedIds")List<Long> feedIds);

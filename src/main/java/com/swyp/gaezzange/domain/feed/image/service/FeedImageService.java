@@ -21,6 +21,10 @@ public class FeedImageService {
     return feedImageRepository.findByFeedId(feedId);
   }
 
+  public Optional<FeedImage> getActiveFeedImageById(Long feedId) {
+    return feedImageRepository.findByFeedIdAndDeletedFalse(feedId);
+  }
+
   public List<FeedImage> findAllByFeedIds(List<Long> feedIds) {
     return feedImageRepository.findAllByFeedIds(feedIds);
   }
