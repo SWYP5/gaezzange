@@ -8,6 +8,7 @@ import com.swyp.gaezzange.util.jpa.DaysOfWeekConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
@@ -32,6 +33,7 @@ import lombok.ToString;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@EntityListeners(RoutineListener.class)
 @Table(
     name = "routines",
     indexes = {
@@ -70,6 +72,7 @@ public class Routine extends BaseTimeEntity {
   private LocalDate startedDate;
 
   @Column(columnDefinition = "DATE DEFAULT '9999-12-31'")
+  @Setter
   private LocalDate endedDate;
 
   @Column
@@ -94,4 +97,7 @@ public class Routine extends BaseTimeEntity {
     executionTime = form.getExecutionTime();
     daysOfWeek = form.getDaysOfWeek();
   }
+
+
 }
+
