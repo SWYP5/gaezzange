@@ -10,7 +10,6 @@ public interface FeedImageRepository extends JpaRepository<FeedImage, Long> {
 
   Optional<FeedImage> findByFeedId(long feedId);
 
-  //TODO 삭제되지 않은 것만 조회
-  @Query("SELECT fi FROM FeedImage fi WHERE fi.feedId IN :feedIds")
+  @Query("SELECT fi FROM FeedImage fi WHERE fi.feedId IN :feedIds AND fi.deleted = false")
   List<FeedImage> findAllByFeedIds(@Param("feedIds")List<Long> feedIds);
 }
