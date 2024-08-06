@@ -9,6 +9,7 @@ public enum RoutineCategory {
   SELF_DEVELOPMENT(Tendency.GAEMI),
   NETWORKING(Tendency.GAEMI),
   CERTIFICATION(Tendency.GAEMI),
+  PLAN(Tendency.GAEMI),
   GAEMI_ETC(Tendency.GAEMI),
 
   REST(Tendency.BAEZZANGE),
