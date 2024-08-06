@@ -69,7 +69,7 @@ public class Routine extends BaseTimeEntity {
   @Column(nullable = false)
   private LocalDate startedDate;
 
-  @Column(nullable = false, columnDefinition = "DATE DEFAULT '9999-12-31'")
+  @Column(columnDefinition = "DATE DEFAULT '9999-12-31'")
   private LocalDate endedDate;
 
   @Column
