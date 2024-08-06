@@ -22,10 +22,6 @@ public class UserAuthService {
     return userAuthRepository.findByProviderCode(providerCode);
   }
 
-  public void deleteAll() {
-    userAuthRepository.deleteAll();
-  }
-
   @Transactional
   public UserAuth saveUserAuth(UserAuth userAuth) {
     return userAuthRepository.save(userAuth);

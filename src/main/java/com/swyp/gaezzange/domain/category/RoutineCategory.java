@@ -23,6 +23,6 @@ public enum RoutineCategory {
   private final Tendency tendency;
 
   RoutineCategory(Tendency tendency) {
-    this.tendency = tendency
+    this.tendency = tendency;
   }
 }
